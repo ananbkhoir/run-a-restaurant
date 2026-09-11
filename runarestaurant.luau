@@ -3600,17 +3600,29 @@ task.spawn(function()
 	end)
 	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetDishwasherId"):Connect(function()
 		if configs.autoactions and table.find(configs.servingactions, "Wash Dishes") then
-			if client.debugmode then
-				notification:new("Washing dishes...")
-			end
-			--task.wait(0.1)
-			repeat task.wait()
-				xpcall(function()
-					--getupvalue(client.md.playerdishwasher.update, 3).Triggered._connections[1]._f()
-					client.moveTo(getupvalue(client.md.playerdishwasher.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
-					client.entityinvoke("TargetDishwasherId", "DepositDishPlayer")
-				end, client.logError)
-			until not client.pl.LocalPlayer:GetAttribute("TargetDishwasherId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Wash Dishes")
+			local targetId = client.pl.LocalPlayer:GetAttribute("TargetDishwasherId")
+			if not targetId then return end
+			
+			xpcall(function()
+			    -- 1. Mencari lokasi mesin cuci piring secara aman
+			    local targetModel = nil
+			    for _, entity in client.getlocalres().Entity do
+			        if entity:GetModel():GetAttribute("EntityId") == targetId then
+			            targetModel = entity:GetModel()
+			            break
+			        end
+			    end
+			    
+			    if targetModel then
+			        -- 2. Berjalan ke mesin cuci piring (dieksekusi satu kali)
+			        client.moveTo(targetModel:GetPivot() * CFrame.new(0, 4, 0))
+			        
+			        -- 3. Meletakkan piring (diulang sampai piring lepas dari tangan)
+			        repeat task.wait(client.getDynamicDelay(0.1))
+			            client.entityinvoke("TargetDishwasherId", "DepositDishPlayer")
+			        until not client.pl.LocalPlayer:GetAttribute("TargetDishwasherId") or not configs.autoactions or not table.find(configs.servingactions, "Wash Dishes")
+			    end
+			end, client.logError)
 		end
 	end)
 	client.md.network.Fired("Influencer_OfferCreated"):Connect(function()
