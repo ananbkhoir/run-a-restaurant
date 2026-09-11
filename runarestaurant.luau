@@ -3015,7 +3015,9 @@ client.moveTo = (function(targetCFrame)
     if configs.movementmethod == "Tween" then
         -- Bergerak halus (aman)
         local distance = (hrp.Position - targetCFrame.Position).Magnitude
-        local speed = 80 -- Kecepatan jalan, bisa kamu ubah angkanya
+        
+        -- Mengambil kecepatan dari setelan pengguna, atau 80 jika belum diatur
+        local speed = configs.tweenspeed or 80 
         local moveTime = distance / speed
         
         local tweenInfo = TweenInfo.new(moveTime, Enum.EasingStyle.Linear)
@@ -3028,6 +3030,7 @@ client.moveTo = (function(targetCFrame)
         char:PivotTo(targetCFrame)
     end
 end)
+
 client.getlocalres = (function()
     return client.md.clientrestaurant.GetLocal()
 end)
@@ -3603,6 +3606,18 @@ sec.AddDropdown({
     Callback = (function(a)
         configs.movementmethod = a
     end);
+})
+sec.AddSlider({
+    Name = "Tween Speed";
+    Desc = "Atur kecepatan jalan karakter saat menggunakan metode Tween.";
+    Default = configs.tweenspeed or 80;
+    Min = 20; -- Kecepatan paling lambat
+    Max = 300; -- Kecepatan paling kencang
+    Round = 0;
+    Prefix = "";
+    Callback = (function(a)
+        configs.tweenspeed = a
+    end)
 })
 local option = sec.AddOptions({
 	Name = "Restaurant Actions";
