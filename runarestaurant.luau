@@ -25,6 +25,443 @@ if not SOTR_OBFUSCATED then
     end
 end
 
+local notification = (function()
+    local Services = {
+        RunService = game:GetService("RunService"),
+        Players = game:GetService("Players"),
+        TweenService = game:GetService("TweenService"),
+    }
+    
+    local Notifications = {}
+    Notifications.list = {}
+    
+	local Services = {
+		RunService = game:GetService("RunService"),
+		Players = game:GetService("Players"),
+		TweenService = game:GetService("TweenService"),
+	}
+
+
+	local Notifications = {}
+
+	Notifications.list = {}
+
+	Notifications.icons = {
+		info = {
+			assetId = "rbxassetid://8445471499",
+			rectOffset = Vector2.new(304, 104),
+			rectSize = Vector2.new(96, 96),
+		},
+		check = {
+			assetId = "rbxassetid://8445471173",
+			rectOffset = Vector2.new(404, 604),
+			rectSize = Vector2.new(96, 96),
+		},
+		error = {
+			assetId = "rbxassetid://8445470559",
+			rectOffset = Vector2.new(404, 504),
+			rectSize = Vector2.new(96, 96),
+		},
+		bell = {
+			assetId = "rbxassetid://8445471332",
+			rectOffset = Vector2.new(4, 504),
+			rectSize = Vector2.new(96, 96),
+		},
+		link = {
+			assetId = "rbxassetid://8445470392",
+			rectOffset = Vector2.new(104, 404),
+			rectSize = Vector2.new(96, 96),
+		},
+		warn = {
+			assetId = "rbxassetid://6764432408",
+			rectOffset = Vector2.new(0, 900),
+			rectSize = Vector2.new(50, 50),
+		}
+	}
+
+	function Notifications:new(message: string, iconName: string?)
+		assert(type(self) == "table", "Expected ':' not '.' calling member function new")
+		assert(type(message) == "string", "invalid argument #2 to 'new' (string expected, got " .. typeof(message) .. ")")
+		assert(iconName == nil or type(iconName) == "string", "invalid argument #3 to 'new' (string or nil expected, got " .. typeof(iconName) .. ")")
+
+		icon = self.icons[iconName] or self.icons.bell
+
+		local newNotif = {}
+
+		newNotif.Notification = Instance.new("ScreenGui")
+		newNotif.Frame = Instance.new("Frame")
+		newNotif.UICorner = Instance.new("UICorner")
+		newNotif.Icon = Instance.new("ImageLabel")
+		newNotif.UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+		newNotif.UIPadding = Instance.new("UIPadding")
+		newNotif.UIStroke = Instance.new("UIStroke")
+		newNotif.message = Instance.new("TextLabel")
+		newNotif.mouseLeaveDetection = Instance.new("Frame")
+		
+		newNotif.Notification.Name = "Notification"
+		newNotif.Notification.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		if Services.RunService:IsStudio() then
+			newNotif.Notification.Parent = Services.Players.LocalPlayer:WaitForChild("PlayerGui")
+		else
+			newNotif.Notification.Parent = gethui and gethui() or game.CoreGui
+		end
+		
+		newNotif.Frame.Parent = newNotif.Notification
+		newNotif.Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+		newNotif.Frame.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+		newNotif.Frame.BackgroundTransparency = 1
+		newNotif.Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		newNotif.Frame.BorderSizePixel = 0
+		newNotif.Frame.Position = UDim2.new(0.899999993, 0, 1.03499997, 0)
+		newNotif.Frame.Size = UDim2.new(0.150529165, 0, 0.0534090921, 0)
+		
+		newNotif.UICorner.CornerRadius = UDim.new(0.15, 0)
+		newNotif.UICorner.Parent = newNotif.Frame
+		
+		newNotif.Icon.Name = "Icon"
+		newNotif.Icon.Parent = newNotif.Frame
+		newNotif.Icon.AnchorPoint = Vector2.new(0.5, 0.5)
+		newNotif.Icon.BackgroundTransparency = 1.000
+		newNotif.Icon.Position = UDim2.new(-0, 0, 0.5, 0)
+		newNotif.Icon.Size = UDim2.new(0.0604347773, 0, 0.47319147, 0)
+		newNotif.Icon.Image = icon.assetId
+		newNotif.Icon.ImageRectOffset = icon.rectOffset
+		newNotif.Icon.ImageRectSize = icon.rectSize
+		newNotif.Icon.ImageTransparency = 1
+		
+		newNotif.UIAspectRatioConstraint.Parent = newNotif.Icon
+		newNotif.UIAspectRatioConstraint.DominantAxis = Enum.DominantAxis.Height
+		
+		newNotif.UIPadding.Parent = newNotif.Frame
+		newNotif.UIPadding.PaddingLeft = UDim.new(0.0799999982, 0)
+		
+		newNotif.UIStroke.Parent = newNotif.Frame
+		newNotif.UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+		newNotif.UIStroke.Color = Color3.fromRGB(161, 161, 161)
+		newNotif.UIStroke.Transparency = 1
+		
+		newNotif.message.Name = "message"
+		newNotif.message.Parent = newNotif.Frame
+		newNotif.message.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		newNotif.message.BackgroundTransparency = 1.000
+		newNotif.message.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		newNotif.message.BorderSizePixel = 0
+		newNotif.message.AnchorPoint = Vector2.new(0, 0.5)
+		newNotif.message.Position = UDim2.new(0.0733131766, 0, 0.5, 0)
+		newNotif.message.Size = UDim2.new(0.866412938, 0, 0.3, 0)
+		newNotif.message.Font = Enum.Font.SourceSansBold
+		newNotif.message.Text = message
+		newNotif.message.RichText = true
+		newNotif.message.TextTruncate = Enum.TextTruncate.AtEnd
+		newNotif.message.TextColor3 = Color3.fromRGB(255, 255, 255)
+		newNotif.message.TextSize = 16.000
+		newNotif.message.TextScaled = true
+		newNotif.message.TextXAlignment = Enum.TextXAlignment.Left
+		newNotif.message.TextTransparency = 1
+
+		newNotif.mouseLeaveDetection.Name = "MouseLeaveDetection"
+		newNotif.mouseLeaveDetection.Parent = newNotif.Notification
+		newNotif.mouseLeaveDetection.AnchorPoint = Vector2.new(0.5, 0.5)
+		newNotif.mouseLeaveDetection.BackgroundTransparency = 1
+		newNotif.mouseLeaveDetection.BorderSizePixel = 0
+		newNotif.mouseLeaveDetection.Position = UDim2.new(0.899999976, 0, 0.886240005, 0)
+		newNotif.mouseLeaveDetection.Size = UDim2.new(0.150529161, 0, 0.201000005, 0)
+		newNotif.mouseLeaveDetection.ZIndex = 5
+		
+		newNotif.lifetime = 4.5
+
+
+
+		function newNotif:destroy(stationary)
+			self.destroying = true
+
+			local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+			if not stationary then
+				Services.TweenService:Create(self.Icon, tweenInfo, { ImageTransparency = 0 }):Play()
+				Services.TweenService:Create(self.message, tweenInfo, { TextTransparency = 0 }):Play()
+				task.wait(0.3)
+			end
+
+			Services.TweenService:Create(self.Icon, tweenInfo, { ImageTransparency = 1 }):Play()
+			Services.TweenService:Create(self.message, tweenInfo, { TextTransparency = 1 }):Play()
+			Services.TweenService:Create(self.UIStroke, tweenInfo, { Transparency = 1 }):Play()
+
+			local position = self.Frame.Position
+			Services.TweenService:Create(self.Frame, tweenInfo, {
+				Position = not stationary and UDim2.new(position.X.Scale, position.X.Offset, position.Y.Scale * 1.05, position.Y.Offset) or nil,
+				BackgroundTransparency = 1,
+			}):Play()
+
+			task.delay(0.3, function()
+				self.Notification:Destroy()
+			end)
+		end
+		
+		task.spawn(function()
+			while true do
+				task.wait(0.5)
+		
+				if not Notifications.mouseIsOn then
+					newNotif.lifetime -= 0.5
+		
+					if newNotif.lifetime <= 0 then
+						newNotif:destroy()
+						return
+					end
+				end
+			end
+		end)
+
+		local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+		newNotif.Frame.MouseEnter:Connect(function()
+			if Notifications.mouseIsOn then
+				return
+			end
+
+			local originalPosition = Notifications.list[1].Frame.Position
+			local originalSize = Notifications.list[1].Frame.Size
+			local lastTargetYScale = originalPosition.Y.Scale * 0.928
+
+			Notifications.mouseIsOn = true
+
+			for index, notif in ipairs(Notifications.list) do
+				if notif.destroying then
+					continue
+				end
+
+				if index == 1 then
+					lastTargetYScale = originalPosition.Y.Scale * 0.99
+				else
+					Services.TweenService:Create(notif.Icon, tweenInfo, { ImageTransparency = 0 }):Play()
+					Services.TweenService:Create(notif.message, tweenInfo, { TextTransparency = 0 }):Play()
+				end
+
+				Services.TweenService:Create(notif.Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					Position = UDim2.new(originalPosition.X.Scale, originalPosition.X.Offset, lastTargetYScale, originalPosition.Y.Offset),
+					Size = originalSize,
+				}):Play()
+
+				lastTargetYScale *= 0.928
+			end
+		end)
+
+		newNotif.mouseLeaveDetection.MouseLeave:Connect(function()
+			Notifications.mouseIsOn = false
+			
+			for index, notif in ipairs(Notifications.list) do
+				if notif.destroying then
+					continue
+				end
+
+				if index > 1 then
+					Services.TweenService:Create(notif.Icon, tweenInfo, { ImageTransparency = 1 }):Play()
+					Services.TweenService:Create(notif.message, tweenInfo, { TextTransparency = 1 }):Play()
+				end
+
+				Services.TweenService:Create(notif.Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					Position = notif.currentPosition,
+					Size = notif.currentSize,
+				}):Play()
+			end
+		end)
+
+		table.insert(self.list, 1, newNotif)
+
+		for index, notif in ipairs(Notifications.list) do
+			local targetPosition = notif.currentPosition or notif.Frame.Position
+			local targetSize = notif.currentSize or notif.Frame.Size
+
+			if index == 1 then
+				Services.TweenService:Create(notif.Icon, tweenInfo, { ImageTransparency = 0 }):Play()
+				Services.TweenService:Create(notif.message, tweenInfo, { TextTransparency = 0 }):Play()
+				Services.TweenService:Create(notif.UIStroke, tweenInfo, { Transparency = 0.36 }):Play()
+
+				targetPosition = UDim2.new(0.899999993, 0, 0.955, 0)
+
+				Services.TweenService:Create(notif.Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					Position = targetPosition,
+					BackgroundTransparency = 0,
+				}):Play()
+			else
+				local position = notif.currentPosition
+				local size = notif.currentSize
+
+				Services.TweenService:Create(notif.Icon, tweenInfo, { ImageTransparency = 1 }):Play()
+				Services.TweenService:Create(notif.message, tweenInfo, { TextTransparency = 1 }):Play()
+
+				targetPosition = UDim2.new(position.X.Scale, position.X.Offset, position.Y.Scale * 0.988, position.Y.Offset)
+				targetSize = UDim2.new(size.X.Scale * 0.93, size.X.Offset, size.Y.Scale, size.Y.Offset)
+
+				Services.TweenService:Create(notif.Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					Position = targetPosition,
+					Size = targetSize,
+				}):Play()
+			end
+
+			notif.currentPosition = targetPosition
+			notif.currentSize = targetSize
+
+			if index > 3 then
+				notif:destroy(true)
+			end
+		end
+	end
+
+	return Notifications
+end)()
+
+local coroutinemaker = (function()
+    local thread = {}
+    
+	function thread:new(threadType, waitTimeSeconds, callback, threadEnded)
+		self._checkArgs({ threadType, waitTimeSeconds, callback }, { { "string" }, { "nil", "number" }, { "function" } })
+		if not self or type(self) ~= "table" then
+			return error("Expected ':' not '.' calling member of function new")
+		end
+
+		local newThread = self:_insertSelf({
+			threadType = threadType,
+			waitTimeSeconds = waitTimeSeconds,
+			callback = callback,
+			enabled = false,
+			isRunning = false,
+		})
+
+		if threadType == "coroutine" then
+			newThread.coroutine = coroutine.create(function()
+				while true do
+					if not newThread.enabled then
+						newThread.isRunning = false
+						coroutine.yield()
+					end
+					newThread.isRunning = true
+
+					if threadEnded then
+						task.defer(newThread.callback)
+						threadEnded.Event:Wait()
+					else
+						local success, errorMessage = pcall(newThread.callback)
+						if not success then
+							task.spawn(error, errorMessage)
+						end
+					end
+
+					task.wait(newThread.waitTimeSeconds)
+				end
+			end)
+		else
+			newThread.connection = game:GetService("RunService")[threadType]:Connect(function(...)
+				if not newThread.enabled then
+					newThread.isRunning = false
+					return
+				end
+				newThread.isRunning = true
+
+				task.spawn(newThread.callback, ...)
+			end)
+		end
+
+		return newThread
+	end
+
+	function thread:setEnabled(enabled)
+		self._checkArgs({ enabled }, { { "boolean" } })
+		if not self or type(self) ~= "table" then
+			return error("Expected ':' not '.' calling member of function setEnabled")
+		end
+		if not self.threadType then
+			return error("Invalid thread to setEnabled")
+		end
+
+		self.enabled = enabled
+
+		if self.threadType == "coroutine" and enabled and not self.isRunning then
+			coroutine.resume(self.coroutine)
+		end
+
+		while self.enabled ~= self.isRunning do
+			task.wait()
+		end
+
+		return self
+	end
+
+	function thread:destroy(shouldDestroyInstantly)
+		if not self or type(self) ~= "table" then
+			return error("Expected ':' not '.' calling member of function destroy")
+		end
+		if not self.threadType then
+			return error("Invalid thread to destroy")
+		end
+
+		if not shouldDestroyInstantly then
+			self.enabled = false
+			repeat
+				task.wait()
+			until not self.isRunning
+		end
+
+		if self.threadType == "coroutine" then
+			pcall(coroutine.close, self.coroutine)
+		else
+			pcall(self.connection.Disconnect, self.connection)
+		end
+
+		table.clear(self)
+		setmetatable(self, nil)
+	end
+
+	function thread._checkArgs(args, expected)
+		for index = 1, #expected do
+			local value = args[index]
+			local argType = typeof(value)
+			local expectations = expected[index]
+
+			local valid = false
+			for i = 1, #expectations do
+				if argType == expectations[i] then
+					valid = true
+					break
+				end
+			end
+
+			if not valid then
+				local expectedString = table.concat(expectations, " or ")
+
+				local funcName = debug.info(2, "n") or "unknown"
+
+				error((
+					"%s argument #%d to '%s' (%s expected%s)"
+				):format(
+					argType == "nil" and "missing" or "invalid",
+					index,
+					funcName,
+					expectedString,
+					argType ~= "nil" and ", got " .. argType or ""
+				), 2)
+			end
+		end
+	end
+
+	function thread:_insertSelf(newThread)
+		for funcName, func in pairs(self) do
+			if typeof(func) ~= "function" then
+				continue
+			end
+
+			newThread[funcName] = func
+		end
+
+		setmetatable(newThread, self)
+
+		return newThread
+	end
+    
+    return thread
+end)()
+
 --local IconsV2 = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/main/Main-v2.lua"))()
 local notification = loadstring(game:HttpGet("https://pastefy.app/GK511jPO/raw"))()
 local Blackscreen = Instance.new("CanvasGroup")
@@ -2471,8 +2908,8 @@ mainui.StartUi = (function(con)
 end)
 
 local client = {
-    coroutinemaker = loadstring(game:HttpGet("https://pastefy.app/CYXJWbVO/raw"))();
-    notification = loadstring(game:HttpGet("https://pastefy.app/GK511jPO/raw"))();
+    coroutinemaker = coroutinemaker;
+    notification = notification;
     pl = game:GetService("Players");
     rs = game:GetService("ReplicatedStorage");
     loop = {};
