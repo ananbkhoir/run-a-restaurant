@@ -3397,9 +3397,9 @@ local timeouttick = tick()
 task.spawn(function()
     for i,v in {
 		autoactions = {0.1, function()
-			task.spawn(function()
-				client.moveTo(client.getorderstandmodel():GetPivot() * CFrame.new(0, 10, 0))
-			end)
+			-- task.spawn(function()
+			--	client.moveTo(client.getorderstandmodel():GetPivot() * CFrame.new(0, 10, 0))
+			-- end)
 			for i,v in configs.servingactions do
 				if v == "Food Serve" then
 					client.runactionsfromdebris("Serve")
