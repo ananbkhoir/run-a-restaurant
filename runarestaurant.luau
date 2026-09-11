@@ -3010,13 +3010,12 @@ hm()
 client.moveTo = (function(targetCFrame)
     local char = client.pl.LocalPlayer.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
-    if not hrp then return end
+    local hum = char and char:FindFirstChild("Humanoid")
+    if not hrp or not hum then return end
 
     if configs.movementmethod == "Tween" then
-        -- Bergerak halus (aman)
+        -- Bergerak halus lurus (Bisa nabrak tembok)
         local distance = (hrp.Position - targetCFrame.Position).Magnitude
-        
-        -- Mengambil kecepatan dari setelan pengguna, atau 80 jika belum diatur
         local speed = configs.tweenspeed or 80 
         local moveTime = distance / speed
         
@@ -3024,9 +3023,45 @@ client.moveTo = (function(targetCFrame)
         local tween = game:GetService("TweenService"):Create(hrp, tweenInfo, {CFrame = targetCFrame})
         
         tween:Play()
-        task.wait(moveTime) -- Menunggu sampai karakter sampai
+        task.wait(moveTime) 
+
+    elseif configs.movementmethod == "Pathfinding" then
+        -- Bergerak cerdas menggunakan GPS Roblox (Anti nabrak)
+        local PathfindingService = game:GetService("PathfindingService")
+        local path = PathfindingService:CreatePath({
+            AgentRadius = 2,
+            AgentHeight = 5,
+            AgentCanJump = true, -- Mengizinkan karakter melompat
+            WaypointSpacing = 4,
+        })
+        
+        local success, errorMessage = pcall(function()
+            path:ComputeAsync(hrp.Position, targetCFrame.Position)
+        end)
+        
+        if success and path.Status == Enum.PathStatus.Success then
+            local waypoints = path:GetWaypoints()
+            for _, waypoint in ipairs(waypoints) do
+                -- Jika butuh melompat, maka lompat
+                if waypoint.Action == Enum.PathWaypointAction.Jump then
+                    hum.Jump = true
+                end
+                
+                hum:MoveTo(waypoint.Position)
+                
+                -- Tunggu sampai karakter tiba di titik tersebut (maksimal 2 detik agar tidak stuck)
+                local reached = hum.MoveToFinished:Wait(2)
+                if not reached then
+                    break -- Jika nyangkut, berhenti mengikuti jalur ini
+                end
+            end
+        else
+            -- Jika jalan buntu dan tidak ada rute, gunakan teleport sebagai cadangan
+            char:PivotTo(targetCFrame)
+        end
+        
     else
-        -- Berpindah instan (cepat tapi berisiko)
+        -- Berpindah instan (Teleport)
         char:PivotTo(targetCFrame)
     end
 end)
@@ -3619,8 +3654,8 @@ local page = ui.AddPage("Main")
 local sec = page.AddSection("Restaurant") --, "Automatically serve customers and run your restaurant by yourself.")
 sec.AddDropdown({
     Name = "Movement Method";
-    Desc = "Pilih cara karakter berpindah (Teleport = Instan, Tween = Jalan Halus/Aman).";
-    Options = {"Teleport", "Tween"};
+    Desc = "Teleport = Instan, Tween = Lurus Tembus Tembok, Pathfinding = Jalan Natural (Anti-Ban).";
+    Options = {"Teleport", "Tween", "Pathfinding"};
     Multi = false;
     Default = configs.movementmethod or "Teleport";
     Callback = (function(a)
