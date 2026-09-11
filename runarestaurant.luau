@@ -2953,6 +2953,56 @@ end
 
 client.isBusy = false
 
+-- Fungsi pendeteksi HTTP Request bawaan executor
+local httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+
+client.sendWebhook = function(url)
+    if not httprequest then 
+        client.logError("Executor-mu tidak mendukung HTTP Request untuk Webhook.")
+        return 
+    end
+    
+    -- Mengambil data uang pemain
+    local cash = client.getcurrencies("Cash") or 0
+    
+    -- Merakit tampilan pesan Discord (Embed)
+    local data = {
+        ["embeds"] = {{
+            ["title"] = "🍽️ Run A Restaurant - AFK Status",
+            ["description"] = "Laporan otomatis dari script Codecoat.",
+            ["color"] = tonumber(0x00FF00), -- Warna hijau
+            ["fields"] = {
+                {
+                    ["name"] = "👤 Player",
+                    ["value"] = client.pl.LocalPlayer.Name,
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = "💵 Cash",
+                    ["value"] = "$" .. tostring(cash),
+                    ["inline"] = true
+                }
+            },
+            ["footer"] = {
+                ["text"] = "Codecoat Webhook Tracker"
+            },
+            ["timestamp"] = DateTime.now():ToIsoDate()
+        }}
+    }
+    
+    -- Mengirim pesan ke Discord tanpa membuat game lag
+    pcall(function()
+        httprequest({
+            Url = url,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = game:GetService("HttpService"):JSONEncode(data)
+        })
+    end)
+end
+
 local configs = {
     autoactions = false;
     servingactions = {};
@@ -4383,6 +4433,63 @@ sec.AddToggle({
 
 
 local page = ui.AddPage("Info")
+local webhookSec = page.AddSection("Discord Webhook")
+
+webhookSec.AddTextbox({
+	Name = "Webhook URL";
+	Desc = "Paste link Discord Webhook kamu di sini.";
+	Default = configs.webhookurl or "";
+	NumbersOnly = false;
+	Callback = (function(text)
+		configs.webhookurl = text
+	end);
+})
+
+webhookSec.AddSlider({
+	Name = "Interval Laporan (Menit)";
+	Desc = "Atur seberapa sering laporan dikirim ke Discord (dalam menit).";
+	Default = configs.webhookinterval or 15;
+	Min = 1;
+	Max = 60;
+	Round = 0;
+	Prefix = " Menit";
+	Callback = (function(val)
+		configs.webhookinterval = val
+	end)
+})
+
+webhookSec.AddToggle({
+	Name = "Aktifkan Webhook Tracker";
+	Desc = "Script akan mengirimkan laporan status AFK secara berkala ke server Discord kamu.";
+	Default = configs.webhooktoggle or false;
+	Callback = (function(state)
+		configs.webhooktoggle = state
+		
+		-- Tes kirim laporan pertama kali saat diaktifkan
+		if state and configs.webhookurl and configs.webhookurl ~= "" then
+		    client.sendWebhook(configs.webhookurl)
+		end
+	end);
+})
+
+-- Logika Timer: Menghitung mundur untuk mengirim pesan berikutnya
+task.spawn(function()
+    while true do
+        task.wait(60) -- Cek setiap 1 menit
+        
+        if configs.webhooktoggle and configs.webhookurl and configs.webhookurl ~= "" then
+            -- Menyimpan waktu terakhir kali mengirim laporan
+            if not client.lastWebhookSent then client.lastWebhookSent = tick() end
+            
+            -- Jika waktu yang berlalu sudah melewati interval yang diatur
+            local intervalDetik = (configs.webhookinterval or 15) * 60
+            if tick() - client.lastWebhookSent >= intervalDetik then
+                client.sendWebhook(configs.webhookurl)
+                client.lastWebhookSent = tick() -- Reset timer
+            end
+        end
+    end
+end)
 local sec = page.AddSection("Configs")
 sec.AddButtons({
     Name = "Configs Manager";
