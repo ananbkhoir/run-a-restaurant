@@ -2944,6 +2944,13 @@ local client = {
 	-- end);
     itemslocklist = {};
 }
+
+client.logError = function(err)
+    -- Menampilkan error di layar menggunakan UI notifikasi dengan ikon "error"
+    client.notification:new("Terjadi kesalahan: " .. tostring(err), "error")
+    warn("Auto-farm Error: ", err) -- Tetap simpan di konsol untuk debugging
+end
+
 local configs = {
     autoactions = false;
     servingactions = {};
@@ -3000,6 +3007,27 @@ local hm = GUF_NO_VIRTUALIZE(function()
 end)
 hm()
 
+client.moveTo = (function(targetCFrame)
+    local char = client.pl.LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+
+    if configs.movementmethod == "Tween" then
+        -- Bergerak halus (aman)
+        local distance = (hrp.Position - targetCFrame.Position).Magnitude
+        local speed = 80 -- Kecepatan jalan, bisa kamu ubah angkanya
+        local moveTime = distance / speed
+        
+        local tweenInfo = TweenInfo.new(moveTime, Enum.EasingStyle.Linear)
+        local tween = game:GetService("TweenService"):Create(hrp, tweenInfo, {CFrame = targetCFrame})
+        
+        tween:Play()
+        task.wait(moveTime) -- Menunggu sampai karakter sampai
+    else
+        -- Berpindah instan (cepat tapi berisiko)
+        char:PivotTo(targetCFrame)
+    end
+end)
 client.getlocalres = (function()
     return client.md.clientrestaurant.GetLocal()
 end)
@@ -3134,17 +3162,17 @@ client.runactionsfromentities = GUF_NO_VIRTUALIZE(function(actionname, shouldtp)
     for i,v in client.getlocalres().Model.Entities:GetChildren() do
         if v:FindFirstChild("HumanoidRootPart") and v.HumanoidRootPart:FindFirstChild("ProximityPrompt") and v.HumanoidRootPart.ProximityPrompt.Enabled and v.HumanoidRootPart.ProximityPrompt.ActionText == actionname then
             if shouldtp then
-				client.pl.LocalPlayer.Character:PivotTo(v.HumanoidRootPart.CFrame)
+				client.moveTo(v.HumanoidRootPart.CFrame)
 			end
 			fireproximityprompt(v.HumanoidRootPart.ProximityPrompt)
         elseif v:FindFirstChild("Root") and v.Root:FindFirstChild("ProximityPrompt") and v.Root.ProximityPrompt.Enabled and v.Root.ProximityPrompt.ActionText == actionname then
             if shouldtp then
-				client.pl.LocalPlayer.Character:PivotTo(v.Root.CFrame)
+				client.moveTo(v.Root.CFrame)
 			end
 			fireproximityprompt(v.Root.ProximityPrompt)
         elseif v:FindFirstChild("Interact") and v.Interact:FindFirstChild("ProximityPrompt") and v.Interact.ProximityPrompt.Enabled and v.Interact.ProximityPrompt.ActionText == actionname then
             if shouldtp then
-				client.pl.LocalPlayer.Character:PivotTo(v.Interact.CFrame)
+				client.moveTo(v.Interact.CFrame)
 			end
 			fireproximityprompt(v.Interact.ProximityPrompt)
         end
@@ -3217,7 +3245,7 @@ client.claimgnomes = (function()
 				xpcall(function()
 					game.Players.LocalPlayer.Character:PivotTo(v:GetPivot())
 					fireclickdetector(v.__SecretGnomeClickDetector)
-				end, print)
+				end, client.logError)
 			until not v:FindFirstChild("__SecretGnomeClickDetector") 
 		end
 	end
@@ -3242,7 +3270,7 @@ client.buyboughtableitems = (function()
 				end
 				task.wait(0.1)
 			end
-	end, print)
+	end, client.logError)
 end)
 client.collectmilestone = (function()
 	for _, k in client.md.milestonesutil.GetCategories() do
@@ -3312,7 +3340,7 @@ task.spawn(function()
     for i,v in {
 		autoactions = {0.1, function()
 			task.spawn(function()
-				client.pl.LocalPlayer.Character:PivotTo(client.getorderstandmodel():GetPivot() * CFrame.new(0, 10, 0))
+				client.moveTo(client.getorderstandmodel():GetPivot() * CFrame.new(0, 10, 0))
 			end)
 			for i,v in configs.servingactions do
 				if v == "Food Serve" then
@@ -3327,7 +3355,7 @@ task.spawn(function()
         autoharvest = {0.1, function()
 			for i,v in workspace.__DEBRIS:GetChildren() do
 				if client.md.clientfridge.HasSpace() and v:FindFirstChild("ProximityPrompt") and v.ProximityPrompt.Enabled and v.ProximityPrompt.ActionText == "Harvest" and not table.find(configs.cropexclude, v.Name:match("^([^_]+)")) then
-					client.pl.LocalPlayer.Character:PivotTo(v.CFrame)
+					client.moveTo(v.CFrame)
 					fireproximityprompt(v.ProximityPrompt)
 					task.wait(0.015)
 				end
@@ -3342,7 +3370,7 @@ task.spawn(function()
 			for i,v in client.getlocalres().Entity do
 				if v.DirId == "Cash Register" and v:GetSave("Cash") and v:GetSave("Cash") >= configs.cashregisteramount then
 					repeat task.wait()
-						client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+						client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 						v:Invoke("CashRegisterClaim")
 					until v:GetSave("Cash") <= configs.cashregisteramount
 				end
@@ -3357,7 +3385,7 @@ task.spawn(function()
 			for i,v in client.getlocalres().Entity do
 				if v.DirId:find("Tip Jar") and v:GetSave("Cash") and v:GetSave("Cash") >= configs.tipjaramount then
 					repeat task.wait()
-						client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+						client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 						v:Invoke("TipJarClaim")
 					until v:GetSave("Cash") <= configs.tipjaramount
 				end
@@ -3389,7 +3417,7 @@ task.spawn(function()
 		   for i,v in client.getlocalres().Entity do
 				if v.Model and feedercurrencytype[v.DirId] then
 					if client.getcurrencies(feedercurrencytype[v.DirId]) > 0 and v:GetSave("Amount") <= (configs.feederamount or 0) then
-						client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+						client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 						v:Fire("Fill")
 					end
 				end
@@ -3398,7 +3426,7 @@ task.spawn(function()
         stationfill = {0.05, function()
             for i,v in client.getlocalres().Entity do
                 if v.DirId == "Basic Processing Station" and v:GetSave("Mode") and v:GetSave("Amount") and client.getcurrencies(v:GetSave("Mode")) > 0 and v:GetSave("Amount") <= (configs.stationamount or 0) then
-                    client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+                    client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
                     v:Invoke("ProcessingStation_Fill")
                 end
             end
@@ -3418,7 +3446,7 @@ task.spawn(function()
 		refillcoffeebeans = {0.1, function()
 			for i,v in client.getlocalres().Entity do
 				if v.Model and v:GetSave("CoffeeBeans") and client.getcurrencies("Coffee Beans") > 0 and v:GetSave("CoffeeBeans") <= (configs.coffeebeansamount or 0) then
-					client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+					client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 					v:Invoke("CoffeeMachineFill")
 				end
 			end
@@ -3431,7 +3459,7 @@ task.spawn(function()
             -- end
 			for i,v in client.getlocalres().Entity do
 				if v.Model and v:GetSave("Milk") and client.getcurrencies("Milk") > 0 and v:GetSave("Milk") <= (configs.milkamount or 0) then
-					client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+					client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 					v:Invoke("IceCreamCartFill")
 				end
 			end
@@ -3450,7 +3478,7 @@ task.spawn(function()
 				if isyes then
 					xpcall(function()
 						notification:new("trained: ".. v:GetDirectory().DisplayName)
-					end, print)
+					end, client.logError)
 				end
 			end
 		end};
@@ -3484,11 +3512,16 @@ task.spawn(function()
 				notification:new("Serving food...")
 			end
 			repeat task.wait()
+				-- xpcall(function()
+				--	client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
+				--	client.moveTo(getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+				-- end, client.logError)
 				xpcall(function()
-					--getupvalue(client.md.playerserving.update, 4).Triggered._connections[1]._f()
 					client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
-					client.pl.LocalPlayer.Character:PivotTo(getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
-				end, print)
+					
+					local targetPos = getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0)
+					client.moveTo(targetPos)
+				end, client.logError)
 			until not client.pl.LocalPlayer:GetAttribute("TargetCustomerId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Food Serve")
 		end
 	end)
@@ -3502,8 +3535,8 @@ task.spawn(function()
 				xpcall(function()
 					--getupvalue(client.md.playerstoves.update, 3).Triggered._connections[1]._f()
 					client.entityinvoke("TargetStoveId", "ActivateStovePlayer")
-					client.pl.LocalPlayer.Character:PivotTo(getupvalue(client.md.playerstoves.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
-				end, print)
+					client.moveTo(getupvalue(client.md.playerstoves.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+				end, client.logError)
 			until not client.pl.LocalPlayer:GetAttribute("TargetStoveId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Cook Food")
 		end
 	end)
@@ -3516,9 +3549,9 @@ task.spawn(function()
 			repeat task.wait()
 				xpcall(function()
 					--getupvalue(client.md.playerdishwasher.update, 3).Triggered._connections[1]._f()
-					client.pl.LocalPlayer.Character:PivotTo(getupvalue(client.md.playerdishwasher.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+					client.moveTo(getupvalue(client.md.playerdishwasher.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
 					client.entityinvoke("TargetDishwasherId", "DepositDishPlayer")
-				end, print)
+				end, client.logError)
 			until not client.pl.LocalPlayer:GetAttribute("TargetDishwasherId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Wash Dishes")
 		end
 	end)
@@ -3555,12 +3588,22 @@ task.spawn(function()
 end)
 
 local ui = mainui.StartUi({
-    Title = "Codecoat";
-    SubTitle = "Run A Restaurant | 1.4.2";
+    Title = "Holy Cow";
+    SubTitle = "Run A Restaurant | 1.0.0";
 	--Size = UDim2.new(0, 485, 0, 350);
 })
 local page = ui.AddPage("Main")
 local sec = page.AddSection("Restaurant") --, "Automatically serve customers and run your restaurant by yourself.")
+sec.AddDropdown({
+    Name = "Movement Method";
+    Desc = "Pilih cara karakter berpindah (Teleport = Instan, Tween = Jalan Halus/Aman).";
+    Options = {"Teleport", "Tween"};
+    Multi = false;
+    Default = configs.movementmethod or "Teleport";
+    Callback = (function(a)
+        configs.movementmethod = a
+    end);
+})
 local option = sec.AddOptions({
 	Name = "Restaurant Actions";
 	Desc = "Select various restaurant actions to run automatically.";
@@ -3645,7 +3688,7 @@ local toggle = sec.AddToggle({
 -- 		xpcall(function()
 -- 			-- toggle.SetDesc
 -- 			print("Automatically teleport and claim the cash register when it hits desired amount of cash.\nClaiming At: $".. tostring(client.numbercommas(tonumber(textbox.GetValue()))))
--- 		end, print)
+-- 		end, client.logError)
 -- 	end
 -- end)
 local textbox = sec.AddTextbox({
@@ -3669,7 +3712,7 @@ local toggle = sec.AddToggle({
 -- 	while true do task.wait(0.25)
 -- 		xpcall(function()
 -- 			print("Automatically teleport and claim the tip jar when it hites desired amount of tips.\nClaiming At: $".. tostring(client.numbercommas(tonumber(textbox.GetValue()))))
--- 		end, print)
+-- 		end, client.logError)
 -- 	end
 -- end)
 
