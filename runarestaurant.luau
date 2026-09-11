@@ -3031,6 +3031,25 @@ client.moveTo = (function(targetCFrame)
     end
 end)
 
+client.getDynamicDelay = (function(baseDelay)
+    -- Mencoba membaca data ping dari game
+    local success, ping = pcall(function()
+        return game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
+    end)
+    
+    -- Jika gagal membaca ping, gunakan kecepatan normal
+    if not success or not ping then return baseDelay end
+
+    -- Logika Rem Otomatis
+    if ping > 400 then
+        return baseDelay + 0.5 -- Ping sangat buruk, tambah jeda 0.5 detik
+    elseif ping > 200 then
+        return baseDelay + 0.2 -- Ping agak buruk, tambah jeda 0.2 detik
+    end
+    
+    return baseDelay -- Ping lancar (<200), gunakan kecepatan bawaan
+end)
+
 client.getlocalres = (function()
     return client.md.clientrestaurant.GetLocal()
 end)
@@ -3188,7 +3207,8 @@ client.runactionsfromdebris = (function(actionname, cooldown, shouldbreak) -- "S
     for i,v in workspace.__DEBRIS:GetChildren() do
         if v:FindFirstChild("ProximityPrompt") and v.ProximityPrompt.Enabled and v.ProximityPrompt.ActionText == actionname then
             fireproximityprompt(v.ProximityPrompt)
-            task.wait(cooldown or 0)
+            task.wait(client.getDynamicDelay(cooldown or 0.05))
+            
 			if shouldbreak then
 				break
 			end
@@ -3919,6 +3939,61 @@ sec.AddToggle({
 })
 
 local page = ui.AddPage("Misc")
+local perfSec = page.AddSection("Performance")
+
+-- 1. Membuat Layar Hitam (Blackscreen)
+local blackScreenGui = Instance.new("ScreenGui")
+blackScreenGui.Name = "CPUSaver"
+blackScreenGui.IgnoreGuiInset = true
+blackScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+blackScreenGui.Parent = gethui and gethui() or game.CoreGui
+blackScreenGui.Enabled = false
+
+local blackFrame = Instance.new("Frame")
+blackFrame.Size = UDim2.new(1, 0, 1, 0)
+blackFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+blackFrame.Parent = blackScreenGui
+
+-- 2. Membuat Teks & Tombol Matikan
+local wakeButton = Instance.new("TextButton")
+wakeButton.Size = UDim2.new(1, 0, 1, 0)
+wakeButton.BackgroundTransparency = 1
+wakeButton.Text = "🌙 CPU & RAM SAVER AKTIF 🌙\n\n[ Klik di mana saja untuk mematikan dan kembali ke game ]"
+wakeButton.TextColor3 = Color3.fromRGB(150, 150, 150)
+wakeButton.Font = Enum.Font.SourceSansBold
+wakeButton.TextSize = 25
+wakeButton.Parent = blackFrame
+
+-- 3. Membuat Menu Toggle di UI Codecoat
+local cpuToggle = perfSec.AddToggle({
+    Name = "CPU & RAM Saver (AFK Mode)";
+    Desc = "Menghitamkan layar & menurunkan FPS ke 15. Sangat direkomendasikan untuk AFK semalaman.";
+    Default = configs.cpusaver or false;
+    Callback = (function(state)
+        configs.cpusaver = state
+        blackScreenGui.Enabled = state
+        
+        if state then
+            -- Turunkan FPS ke 15 (jika executor mendukung)
+            if setfpscap then setfpscap(15) end
+            -- Matikan pemrosesan 3D dunia game
+            pcall(function() game:GetService("RunService"):Set3dRenderingEnabled(false) end)
+        else
+            -- Kembalikan FPS ke normal (0 = tidak dibatasi)
+            if setfpscap then setfpscap(0) end
+            -- Nyalakan kembali pemrosesan 3D
+            pcall(function() game:GetService("RunService"):Set3dRenderingEnabled(true) end)
+        end
+    end);
+})
+
+-- 4. Logika saat layar hitam diklik
+wakeButton.MouseButton1Click:Connect(function()
+    if cpuToggle and cpuToggle.Set then
+        cpuToggle.Set(false) -- Mematikan toggle secara otomatis
+    end
+end)
+
 local sec = page.AddSection("NPCs")
 sec.AddToggle({
 	Name = "Fast NPCs";
