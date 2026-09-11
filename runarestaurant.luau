@@ -1,3 +1,9 @@
+--[[
+i decided to go open source this because i'm no longer to find this game fun anymore. sowwwyy :<
+oh and credits to gemini 3.1 pro for some things like blackmarket stuffz
+
+if you're here for the ui instead. it's honestly poorly written and wasn't made for public use. soo you might find this ui horribly made. and roblox recently deleted gothambold font. soo you'll find the text look horrible
+--]]
 if not IB_OBFUSCATED then
 	IB_NO_VIRTUALIZE = function(fn)
 		return fn
@@ -18,361 +24,8 @@ if not SOTR_OBFUSCATED then
         return f
     end
 end
-local notification = (function()
-    local Services = {
-        RunService = game:GetService("RunService"),
-        Players = game:GetService("Players"),
-        TweenService = game:GetService("TweenService"),
-    }
-    local Notifications = {}
-    Notifications.list = {}
-	local Services = {
-		RunService = game:GetService("RunService"),
-		Players = game:GetService("Players"),
-		TweenService = game:GetService("TweenService"),
-	}
-	local Notifications = {}
-	Notifications.list = {}
-	Notifications.icons = {
-		info = {
-			assetId = "rbxassetid://8445471499",
-			rectOffset = Vector2.new(304, 104),
-			rectSize = Vector2.new(96, 96),
-		},
-		check = {
-			assetId = "rbxassetid://8445471173",
-			rectOffset = Vector2.new(404, 604),
-			rectSize = Vector2.new(96, 96),
-		},
-		error = {
-			assetId = "rbxassetid://8445470559",
-			rectOffset = Vector2.new(404, 504),
-			rectSize = Vector2.new(96, 96),
-		},
-		bell = {
-			assetId = "rbxassetid://8445471332",
-			rectOffset = Vector2.new(4, 504),
-			rectSize = Vector2.new(96, 96),
-		},
-		link = {
-			assetId = "rbxassetid://8445470392",
-			rectOffset = Vector2.new(104, 404),
-			rectSize = Vector2.new(96, 96),
-		},
-		warn = {
-			assetId = "rbxassetid://6764432408",
-			rectOffset = Vector2.new(0, 900),
-			rectSize = Vector2.new(50, 50),
-		}
-	}
-	function Notifications:new(message: string, iconName: string?)
-		assert(type(self) == "table", "Expected ':' not '.' calling member function new")
-		assert(type(message) == "string", "invalid argument #2 to 'new' (string expected, got " .. typeof(message) .. ")")
-		assert(iconName == nil or type(iconName) == "string", "invalid argument #3 to 'new' (string or nil expected, got " .. typeof(iconName) .. ")")
-		icon = self.icons[iconName] or self.icons.bell
-		local newNotif = {}
-		newNotif.Notification = Instance.new("ScreenGui")
-		newNotif.Frame = Instance.new("Frame")
-		newNotif.UICorner = Instance.new("UICorner")
-		newNotif.Icon = Instance.new("ImageLabel")
-		newNotif.UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
-		newNotif.UIPadding = Instance.new("UIPadding")
-		newNotif.UIStroke = Instance.new("UIStroke")
-		newNotif.message = Instance.new("TextLabel")
-		newNotif.mouseLeaveDetection = Instance.new("Frame")
-		newNotif.Notification.Name = "Notification"
-		newNotif.Notification.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-		if Services.RunService:IsStudio() then
-			newNotif.Notification.Parent = Services.Players.LocalPlayer:WaitForChild("PlayerGui")
-		else
-			newNotif.Notification.Parent = gethui and gethui() or game.CoreGui
-		end
-		newNotif.Frame.Parent = newNotif.Notification
-		newNotif.Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-		newNotif.Frame.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
-		newNotif.Frame.BackgroundTransparency = 1
-		newNotif.Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		newNotif.Frame.BorderSizePixel = 0
-		newNotif.Frame.Position = UDim2.new(0.899999993, 0, 1.03499997, 0)
-		newNotif.Frame.Size = UDim2.new(0.150529165, 0, 0.0534090921, 0)
-		newNotif.UICorner.CornerRadius = UDim.new(0.15, 0)
-		newNotif.UICorner.Parent = newNotif.Frame
-		newNotif.Icon.Name = "Icon"
-		newNotif.Icon.Parent = newNotif.Frame
-		newNotif.Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-		newNotif.Icon.BackgroundTransparency = 1.000
-		newNotif.Icon.Position = UDim2.new(-0, 0, 0.5, 0)
-		newNotif.Icon.Size = UDim2.new(0.0604347773, 0, 0.47319147, 0)
-		newNotif.Icon.Image = icon.assetId
-		newNotif.Icon.ImageRectOffset = icon.rectOffset
-		newNotif.Icon.ImageRectSize = icon.rectSize
-		newNotif.Icon.ImageTransparency = 1
-		newNotif.UIAspectRatioConstraint.Parent = newNotif.Icon
-		newNotif.UIAspectRatioConstraint.DominantAxis = Enum.DominantAxis.Height
-		newNotif.UIPadding.Parent = newNotif.Frame
-		newNotif.UIPadding.PaddingLeft = UDim.new(0.0799999982, 0)
-		newNotif.UIStroke.Parent = newNotif.Frame
-		newNotif.UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-		newNotif.UIStroke.Color = Color3.fromRGB(161, 161, 161)
-		newNotif.UIStroke.Transparency = 1
-		newNotif.message.Name = "message"
-		newNotif.message.Parent = newNotif.Frame
-		newNotif.message.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		newNotif.message.BackgroundTransparency = 1.000
-		newNotif.message.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		newNotif.message.BorderSizePixel = 0
-		newNotif.message.AnchorPoint = Vector2.new(0, 0.5)
-		newNotif.message.Position = UDim2.new(0.0733131766, 0, 0.5, 0)
-		newNotif.message.Size = UDim2.new(0.866412938, 0, 0.3, 0)
-		newNotif.message.Font = Enum.Font.SourceSansBold
-		newNotif.message.Text = message
-		newNotif.message.RichText = true
-		newNotif.message.TextTruncate = Enum.TextTruncate.AtEnd
-		newNotif.message.TextColor3 = Color3.fromRGB(255, 255, 255)
-		newNotif.message.TextSize = 16.000
-		newNotif.message.TextScaled = true
-		newNotif.message.TextXAlignment = Enum.TextXAlignment.Left
-		newNotif.message.TextTransparency = 1
-		newNotif.mouseLeaveDetection.Name = "MouseLeaveDetection"
-		newNotif.mouseLeaveDetection.Parent = newNotif.Notification
-		newNotif.mouseLeaveDetection.AnchorPoint = Vector2.new(0.5, 0.5)
-		newNotif.mouseLeaveDetection.BackgroundTransparency = 1
-		newNotif.mouseLeaveDetection.BorderSizePixel = 0
-		newNotif.mouseLeaveDetection.Position = UDim2.new(0.899999976, 0, 0.886240005, 0)
-		newNotif.mouseLeaveDetection.Size = UDim2.new(0.150529161, 0, 0.201000005, 0)
-		newNotif.mouseLeaveDetection.ZIndex = 5
-		newNotif.lifetime = 4.5
-		function newNotif:destroy(stationary)
-			self.destroying = true
-			local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-			if not stationary then
-				Services.TweenService:Create(self.Icon, tweenInfo, { ImageTransparency = 0 }):Play()
-				Services.TweenService:Create(self.message, tweenInfo, { TextTransparency = 0 }):Play()
-				task.wait(0.3)
-			end
-			Services.TweenService:Create(self.Icon, tweenInfo, { ImageTransparency = 1 }):Play()
-			Services.TweenService:Create(self.message, tweenInfo, { TextTransparency = 1 }):Play()
-			Services.TweenService:Create(self.UIStroke, tweenInfo, { Transparency = 1 }):Play()
-			local position = self.Frame.Position
-			Services.TweenService:Create(self.Frame, tweenInfo, {
-				Position = not stationary and UDim2.new(position.X.Scale, position.X.Offset, position.Y.Scale * 1.05, position.Y.Offset) or nil,
-				BackgroundTransparency = 1,
-			}):Play()
-			task.delay(0.3, function()
-				self.Notification:Destroy()
-			end)
-		end
-		task.spawn(function()
-			while true do
-				task.wait(0.5)
-				if not Notifications.mouseIsOn then
-					newNotif.lifetime -= 0.5
-					if newNotif.lifetime <= 0 then
-						newNotif:destroy()
-						return
-					end
-				end
-			end
-		end)
-		local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-		newNotif.Frame.MouseEnter:Connect(function()
-			if Notifications.mouseIsOn then
-				return
-			end
-			local originalPosition = Notifications.list[1].Frame.Position
-			local originalSize = Notifications.list[1].Frame.Size
-			local lastTargetYScale = originalPosition.Y.Scale * 0.928
-			Notifications.mouseIsOn = true
-			for index, notif in ipairs(Notifications.list) do
-				if notif.destroying then
-					continue
-				end
-				if index == 1 then
-					lastTargetYScale = originalPosition.Y.Scale * 0.99
-				else
-					Services.TweenService:Create(notif.Icon, tweenInfo, { ImageTransparency = 0 }):Play()
-					Services.TweenService:Create(notif.message, tweenInfo, { TextTransparency = 0 }):Play()
-				end
-				Services.TweenService:Create(notif.Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-					Position = UDim2.new(originalPosition.X.Scale, originalPosition.X.Offset, lastTargetYScale, originalPosition.Y.Offset),
-					Size = originalSize,
-				}):Play()
-				lastTargetYScale *= 0.928
-			end
-		end)
-		newNotif.mouseLeaveDetection.MouseLeave:Connect(function()
-			Notifications.mouseIsOn = false
-			for index, notif in ipairs(Notifications.list) do
-				if notif.destroying then
-					continue
-				end
-				if index > 1 then
-					Services.TweenService:Create(notif.Icon, tweenInfo, { ImageTransparency = 1 }):Play()
-					Services.TweenService:Create(notif.message, tweenInfo, { TextTransparency = 1 }):Play()
-				end
-				Services.TweenService:Create(notif.Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-					Position = notif.currentPosition,
-					Size = notif.currentSize,
-				}):Play()
-			end
-		end)
-		table.insert(self.list, 1, newNotif)
-		for index, notif in ipairs(Notifications.list) do
-			local targetPosition = notif.currentPosition or notif.Frame.Position
-			local targetSize = notif.currentSize or notif.Frame.Size
-			if index == 1 then
-				Services.TweenService:Create(notif.Icon, tweenInfo, { ImageTransparency = 0 }):Play()
-				Services.TweenService:Create(notif.message, tweenInfo, { TextTransparency = 0 }):Play()
-				Services.TweenService:Create(notif.UIStroke, tweenInfo, { Transparency = 0.36 }):Play()
-				targetPosition = UDim2.new(0.899999993, 0, 0.955, 0)
-				Services.TweenService:Create(notif.Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-					Position = targetPosition,
-					BackgroundTransparency = 0,
-				}):Play()
-			else
-				local position = notif.currentPosition
-				local size = notif.currentSize
-				Services.TweenService:Create(notif.Icon, tweenInfo, { ImageTransparency = 1 }):Play()
-				Services.TweenService:Create(notif.message, tweenInfo, { TextTransparency = 1 }):Play()
-				targetPosition = UDim2.new(position.X.Scale, position.X.Offset, position.Y.Scale * 0.988, position.Y.Offset)
-				targetSize = UDim2.new(size.X.Scale * 0.93, size.X.Offset, size.Y.Scale, size.Y.Offset)
-				Services.TweenService:Create(notif.Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-					Position = targetPosition,
-					Size = targetSize,
-				}):Play()
-			end
-			notif.currentPosition = targetPosition
-			notif.currentSize = targetSize
-			if index > 3 then
-				notif:destroy(true)
-			end
-		end
-	end
-	return Notifications
-end)()
-local coroutinemaker = (function()
-    local thread = {}
-	function thread:new(threadType, waitTimeSeconds, callback, threadEnded)
-		self._checkArgs({ threadType, waitTimeSeconds, callback }, { { "string" }, { "nil", "number" }, { "function" } })
-		if not self or type(self) ~= "table" then
-			return error("Expected ':' not '.' calling member of function new")
-		end
-		local newThread = self:_insertSelf({
-			threadType = threadType,
-			waitTimeSeconds = waitTimeSeconds,
-			callback = callback,
-			enabled = false,
-			isRunning = false,
-		})
-		if threadType == "coroutine" then
-			newThread.coroutine = coroutine.create(function()
-				while true do
-					if not newThread.enabled then
-						newThread.isRunning = false
-						coroutine.yield()
-					end
-					newThread.isRunning = true
-					if threadEnded then
-						task.defer(newThread.callback)
-						threadEnded.Event:Wait()
-					else
-						local success, errorMessage = pcall(newThread.callback)
-						if not success then
-							task.spawn(error, errorMessage)
-						end
-					end
-					task.wait(newThread.waitTimeSeconds)
-				end
-			end)
-		else
-			newThread.connection = game:GetService("RunService")[threadType]:Connect(function(...)
-				if not newThread.enabled then
-					newThread.isRunning = false
-					return
-				end
-				newThread.isRunning = true
-				task.spawn(newThread.callback, ...)
-			end)
-		end
-		return newThread
-	end
-	function thread:setEnabled(enabled)
-		self._checkArgs({ enabled }, { { "boolean" } })
-		if not self or type(self) ~= "table" then
-			return error("Expected ':' not '.' calling member of function setEnabled")
-		end
-		if not self.threadType then
-			return error("Invalid thread to setEnabled")
-		end
-		self.enabled = enabled
-		if self.threadType == "coroutine" and enabled and not self.isRunning then
-			coroutine.resume(self.coroutine)
-		end
-		while self.enabled ~= self.isRunning do
-			task.wait()
-		end
-		return self
-	end
-	function thread:destroy(shouldDestroyInstantly)
-		if not self or type(self) ~= "table" then
-			return error("Expected ':' not '.' calling member of function destroy")
-		end
-		if not self.threadType then
-			return error("Invalid thread to destroy")
-		end
-		if not shouldDestroyInstantly then
-			self.enabled = false
-			repeat
-				task.wait()
-			until not self.isRunning
-		end
-		if self.threadType == "coroutine" then
-			pcall(coroutine.close, self.coroutine)
-		else
-			pcall(self.connection.Disconnect, self.connection)
-		end
-		table.clear(self)
-		setmetatable(self, nil)
-	end
-	function thread._checkArgs(args, expected)
-		for index = 1, #expected do
-			local value = args[index]
-			local argType = typeof(value)
-			local expectations = expected[index]
-			local valid = false
-			for i = 1, #expectations do
-				if argType == expectations[i] then
-					valid = true
-					break
-				end
-			end
-			if not valid then
-				local expectedString = table.concat(expectations, " or ")
-				local funcName = debug.info(2, "n") or "unknown"
-				error((
-					"%s argument #%d to '%s' (%s expected%s)"
-				):format(
-					argType == "nil" and "missing" or "invalid",
-					index,
-					funcName,
-					expectedString,
-					argType ~= "nil" and ", got " .. argType or ""
-				), 2)
-			end
-		end
-	end
-	function thread:_insertSelf(newThread)
-		for funcName, func in pairs(self) do
-			if typeof(func) ~= "function" then
-				continue
-			end
-			newThread[funcName] = func
-		end
-		setmetatable(newThread, self)
-		return newThread
-	end
-    return thread
-end)()
+
+--local IconsV2 = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/main/Main-v2.lua"))()
 local notification = loadstring(game:HttpGet("https://pastefy.app/GK511jPO/raw"))()
 local Blackscreen = Instance.new("CanvasGroup")
 Blackscreen.GroupTransparency = 1
@@ -382,11 +35,13 @@ local ts = game:GetService("TweenService")
 local resources = {}
 local elements = {}
 local options = {}
+
 mainui = {
 	Color = mainui.Color or Color3.new(1, 1, 0);
 	ColorElements = {};
 	Flags = {};
 }
+
 local function combineall(inst)
 	local insts = {}
 	insts[inst.Name] = inst
@@ -395,24 +50,31 @@ local function combineall(inst)
 	end
 	return insts
 end
+
+-- lowkenuinely forgot where this came from and how i got these.
 resources.DraggingEnabled = (function(frame, parent)
 	parent = parent or frame
+
 	local gui = parent
 	local dragging
 	local dragInput
 	local dragStart
 	local startPos
+
 	local function update(input)
 		local delta = input.Position - dragStart
 		game:GetService("TweenService"):Create(gui,TweenInfo.new(0), {
 			Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 		}):Play()
+		--gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 	end
+
 	frame.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			dragging = true
 			dragStart = input.Position
 			startPos = gui.Position
+
 			input.Changed:Connect(function()
 				if input.UserInputState == Enum.UserInputState.End then
 					dragging = false
@@ -420,17 +82,20 @@ resources.DraggingEnabled = (function(frame, parent)
 			end)
 		end
 	end)
+
 	frame.InputChanged:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 			dragInput = input
 		end
 	end)
+
 	game:GetService("UserInputService").InputChanged:Connect(function(input)
 		if input == dragInput and dragging then
 			update(input)
 		end
 	end)
 end)
+
 resources.doripple = function(button)
 	local player = game:GetService("Players").LocalPlayer
 	if not player then
@@ -462,9 +127,11 @@ resources.doripple = function(button)
 		end
 	end)
 end
+
 mainui.addcolorelements = (function(elementinst)
 	mainui.ColorElements[#mainui.ColorElements + 1] = elementinst
 end)
+
 resources.switchframe = (function(inst)
 	local SwitchFrame = Instance.new("TextButton")
 	local SwitchFrameStroke = Instance.new("UIStroke")
@@ -473,6 +140,7 @@ resources.switchframe = (function(inst)
 	local SwitchFrameCircle = Instance.new("Frame")
 	local SwitchFrameCircleCorner = Instance.new("UICorner")
 	local SwitchFrameCircleStroke = Instance.new("UIStroke")
+
 	SwitchFrame.Name = "SwitchFrame"
 	SwitchFrame.Parent = inst
 	SwitchFrame.AnchorPoint = Vector2.new(0, 0.5)
@@ -488,19 +156,23 @@ resources.switchframe = (function(inst)
 	SwitchFrame.Text = ""
 	SwitchFrame.TextColor3 = Color3.fromRGB(0, 0, 0)
 	SwitchFrame.TextSize = 14.000
+
 	SwitchFrameStroke.Name = "SwitchFrameStroke"
 	SwitchFrameStroke.Parent = SwitchFrame
 	SwitchFrameStroke.Color = Color3.fromRGB(255, 255, 0)
 	SwitchFrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
 	SwitchFrameCorner.CornerRadius = UDim.new(0, 2)
 	SwitchFrameCorner.Name = "SwitchFrameCorner"
 	SwitchFrameCorner.Parent = SwitchFrame
+
 	SwitchFramePadding.Name = "SwitchFramePadding"
 	SwitchFramePadding.Parent = SwitchFrame
 	SwitchFramePadding.PaddingBottom = UDim.new(0, 4)
 	SwitchFramePadding.PaddingLeft = UDim.new(0, 1)
 	SwitchFramePadding.PaddingRight = UDim.new(0, 1)
 	SwitchFramePadding.PaddingTop = UDim.new(0, 4)
+
 	SwitchFrameCircle.Name = "SwitchFrameCircle"
 	SwitchFrameCircle.Parent = SwitchFrame
 	SwitchFrameCircle.AnchorPoint = Vector2.new(0, 0.5)
@@ -510,15 +182,19 @@ resources.switchframe = (function(inst)
 	SwitchFrameCircle.Position = UDim2.new(0, 0, 0.5, 0)
 	SwitchFrameCircle.Size = UDim2.new(0, 15, 0, 11)
 	SwitchFrameCircle.ZIndex = 2
+
 	SwitchFrameCircleCorner.CornerRadius = UDim.new(0, 2)
 	SwitchFrameCircleCorner.Name = "SwitchFrameCircleCorner"
 	SwitchFrameCircleCorner.Parent = SwitchFrameCircle
+
 	SwitchFrameCircleStroke.Name = "SwitchFrameCircleStroke"
 	SwitchFrameCircleStroke.Parent = SwitchFrameCircle
 	SwitchFrameCircleStroke.Color = Color3.fromRGB(255, 255, 0)
 	SwitchFrameCircleStroke.Thickness = 0.000
+
 	return combineall(SwitchFrame)
 end)
+
 resources.toggle = (function(inst)
 	local Toggle = Instance.new("Frame")
 	local TogglePadding = Instance.new("UIPadding")
@@ -541,6 +217,7 @@ resources.toggle = (function(inst)
 	local ToggleFrameLayout = Instance.new("UIListLayout")
 	local SwitchFrameStatus = Instance.new("TextLabel")
 	local UIPadding = Instance.new("UIPadding")
+
 	Toggle.Name = "Toggle"
 	Toggle.Parent = inst
 	Toggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -549,11 +226,13 @@ resources.toggle = (function(inst)
 	Toggle.BorderSizePixel = 0
 	Toggle.Size = UDim2.new(1, 0, 0, 40)
 	Toggle.AutomaticSize = Enum.AutomaticSize.Y
+
 	TogglePadding.Name = "TogglePadding"
 	TogglePadding.Parent = Toggle
 	TogglePadding.PaddingBottom = UDim.new(0, -5)
 	TogglePadding.PaddingLeft = UDim.new(0, 5)
 	TogglePadding.PaddingRight = UDim.new(0, 5)
+
 	ToggleMain.Name = "ToggleMain"
 	ToggleMain.Parent = Toggle
 	ToggleMain.BackgroundColor3 = Color3.fromRGB(28, 30, 31)
@@ -561,9 +240,11 @@ resources.toggle = (function(inst)
 	ToggleMain.BorderSizePixel = 0
 	ToggleMain.Size = UDim2.new(1, 0, 1, 0)
 	ToggleMain.AutomaticSize = Enum.AutomaticSize.Y
+
 	ToggleMainCorner.CornerRadius = UDim.new(0, 3)
 	ToggleMainCorner.Name = "ToggleMainCorner"
 	ToggleMainCorner.Parent = ToggleMain
+
 	ToggleMainText.Name = "ToggleMainText"
 	ToggleMainText.Parent = ToggleMain
 	ToggleMainText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -571,23 +252,26 @@ resources.toggle = (function(inst)
 	ToggleMainText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ToggleMainText.BorderSizePixel = 0
 	ToggleMainText.Size = UDim2.new(1, -50, 0, 0)
-	ToggleMainText.Font = Enum.Font.BuilderSansBold
-	ToggleMainText.Text = "" 
+	ToggleMainText.Font = Enum.Font.GothamBold
+	ToggleMainText.Text = "" --"Infinite Jump"
 	ToggleMainText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	ToggleMainText.TextSize = 13.000
 	ToggleMainText.TextWrapped = true
 	ToggleMainText.TextXAlignment = Enum.TextXAlignment.Left
 	ToggleMainText.TextYAlignment = Enum.TextYAlignment.Bottom
 	ToggleMainText.AutomaticSize = Enum.AutomaticSize.Y
+
 	ToggleMainPadding.Name = "ToggleMainPadding"
 	ToggleMainPadding.Parent = ToggleMain
 	ToggleMainPadding.PaddingBottom = UDim.new(0, 0)
 	ToggleMainPadding.PaddingLeft = UDim.new(0, 10)
 	ToggleMainPadding.PaddingRight = UDim.new(0, 5)
 	ToggleMainPadding.PaddingTop = UDim.new(0, 5)
+
 	ToggleMainLayout.Name = "ToggleMainLayout"
 	ToggleMainLayout.Parent = ToggleMain
 	ToggleMainLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
 	ToggleMainDesc.Name = "ToggleMainDesc"
 	ToggleMainDesc.Parent = ToggleMain
 	ToggleMainDesc.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -595,14 +279,15 @@ resources.toggle = (function(inst)
 	ToggleMainDesc.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ToggleMainDesc.BorderSizePixel = 0
 	ToggleMainDesc.Size = UDim2.new(1, -10, 0, 0)
-	ToggleMainDesc.Font = Enum.Font.BuilderSansBold
-	ToggleMainDesc.Text = "" 
+	ToggleMainDesc.Font = Enum.Font.GothamBold
+	ToggleMainDesc.Text = "" --"Removes character jump limitations."
 	ToggleMainDesc.TextColor3 = Color3.fromRGB(141, 141, 141)
 	ToggleMainDesc.TextSize = 11.000
 	ToggleMainDesc.TextWrapped = true
 	ToggleMainDesc.TextXAlignment = Enum.TextXAlignment.Left
 	ToggleMainDesc.TextYAlignment = Enum.TextYAlignment.Bottom
 	ToggleMainDesc.AutomaticSize = Enum.AutomaticSize.Y
+
 	ToggleFrame.Name = "ToggleFrame"
 	ToggleFrame.Parent = ToggleMain
 	ToggleFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -611,6 +296,7 @@ resources.toggle = (function(inst)
 	ToggleFrame.BorderSizePixel = 0
 	ToggleFrame.Size = UDim2.new(1, 0, 0, 0)
 	ToggleFrame.AutomaticSize = Enum.AutomaticSize.Y
+
 	SwitchFrame.Name = "SwitchFrame"
 	SwitchFrame.Parent = ToggleFrame
 	SwitchFrame.AnchorPoint = Vector2.new(0, 0.5)
@@ -625,13 +311,16 @@ resources.toggle = (function(inst)
 	SwitchFrame.Text = ""
 	SwitchFrame.TextColor3 = Color3.fromRGB(0, 0, 0)
 	SwitchFrame.TextSize = 14.000
+
 	SwitchFrameStroke.Name = "SwitchFrameStroke"
 	SwitchFrameStroke.Parent = SwitchFrame
 	SwitchFrameStroke.Color = Color3.fromRGB(255, 255, 0)
 	SwitchFrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
 	SwitchFrameCorner.CornerRadius = UDim.new(0, 2)
 	SwitchFrameCorner.Name = "SwitchFrameCorner"
 	SwitchFrameCorner.Parent = SwitchFrame
+
 	SwitchFrameTextOn.Name = "SwitchFrameTextOn"
 	SwitchFrameTextOn.Parent = SwitchFrame
 	SwitchFrameTextOn.AnchorPoint = Vector2.new(0, 0.5)
@@ -643,16 +332,18 @@ resources.toggle = (function(inst)
 	SwitchFrameTextOn.Size = UDim2.new(0, 20, 0, 20)
 	SwitchFrameTextOn.Visible = false
 	SwitchFrameTextOn.ZIndex = 0
-	SwitchFrameTextOn.Font = Enum.Font.BuilderSansBold
+	SwitchFrameTextOn.Font = Enum.Font.GothamBold
 	SwitchFrameTextOn.Text = "On"
 	SwitchFrameTextOn.TextColor3 = Color3.fromRGB(0, 0, 0)
 	SwitchFrameTextOn.TextSize = 10.000
+
 	SwitchFramePadding.Name = "SwitchFramePadding"
 	SwitchFramePadding.Parent = SwitchFrame
 	SwitchFramePadding.PaddingBottom = UDim.new(0, 4)
 	SwitchFramePadding.PaddingLeft = UDim.new(0, 1)
 	SwitchFramePadding.PaddingRight = UDim.new(0, 1)
 	SwitchFramePadding.PaddingTop = UDim.new(0, 4)
+
 	SwitchFrameTextOff.Name = "SwitchFrameTextOff"
 	SwitchFrameTextOff.Parent = SwitchFrame
 	SwitchFrameTextOff.AnchorPoint = Vector2.new(0, 0.5)
@@ -664,11 +355,12 @@ resources.toggle = (function(inst)
 	SwitchFrameTextOff.Size = UDim2.new(0, 20, 0, 20)
 	SwitchFrameTextOff.Visible = false
 	SwitchFrameTextOff.ZIndex = 0
-	SwitchFrameTextOff.Font = Enum.Font.BuilderSansBold
+	SwitchFrameTextOff.Font = Enum.Font.GothamBold
 	SwitchFrameTextOff.Text = "Off"
 	SwitchFrameTextOff.TextColor3 = Color3.fromRGB(255, 255, 255)
 	SwitchFrameTextOff.TextSize = 10.000
 	SwitchFrameTextOff.TextXAlignment = Enum.TextXAlignment.Left
+
 	SwitchFrameCircle.Name = "SwitchFrameCircle"
 	SwitchFrameCircle.Parent = SwitchFrame
 	SwitchFrameCircle.AnchorPoint = Vector2.new(0, 0.5)
@@ -678,20 +370,24 @@ resources.toggle = (function(inst)
 	SwitchFrameCircle.Position = UDim2.new(0, 0, 0.5, 0)
 	SwitchFrameCircle.Size = UDim2.new(0, 20, 0, 12)
 	SwitchFrameCircle.ZIndex = 2
+
 	SwitchFrameCircleCorner.CornerRadius = UDim.new(0, 2)
 	SwitchFrameCircleCorner.Name = "SwitchFrameCircleCorner"
 	SwitchFrameCircleCorner.Parent = SwitchFrameCircle
+
 	SwitchFrameCircleStroke.Name = "SwitchFrameCircleStroke"
 	SwitchFrameCircleStroke.Parent = SwitchFrameCircle
 	SwitchFrameCircleStroke.Color = Color3.fromRGB(255, 255, 0)
 	SwitchFrameCircleStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
 	SwitchFrameCircleStroke.Thickness = 0
+
 	ToggleFrameLayout.Name = "ToggleFrameLayout"
 	ToggleFrameLayout.Parent = ToggleFrame
 	ToggleFrameLayout.FillDirection = Enum.FillDirection.Horizontal
 	ToggleFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	ToggleFrameLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 	ToggleFrameLayout.Padding = UDim.new(0, 7)
+
 	SwitchFrameStatus.Name = "SwitchFrameStatus"
 	SwitchFrameStatus.Parent = ToggleFrame
 	SwitchFrameStatus.AnchorPoint = Vector2.new(0, 0.5)
@@ -702,17 +398,20 @@ resources.toggle = (function(inst)
 	SwitchFrameStatus.Position = UDim2.new(0, 0, 0.5, 0)
 	SwitchFrameStatus.Size = UDim2.new(0, 0, 0, 20)
 	SwitchFrameStatus.ZIndex = 0
-	SwitchFrameStatus.Font = Enum.Font.BuilderSansBold
+	SwitchFrameStatus.Font = Enum.Font.GothamBold
 	SwitchFrameStatus.Text = "Off"
 	SwitchFrameStatus.TextColor3 = Color3.fromRGB(200, 200, 200)
 	SwitchFrameStatus.TextSize = 12.000
 	SwitchFrameStatus.AutomaticSize = Enum.AutomaticSize.X
+
 	UIPadding.Parent = ToggleFrame
 	UIPadding.PaddingBottom = UDim.new(0, 5)
 	UIPadding.PaddingTop = UDim.new(0, 5)
 	UIPadding.PaddingLeft = UDim.new(0, 2)
+
 	return combineall(Toggle)
 end)
+
 resources.slider = (function(inst)
 	local Slider = Instance.new("Frame")
 	local SliderPadding = Instance.new("UIPadding")
@@ -734,6 +433,7 @@ resources.slider = (function(inst)
 	local SliderMainBarFillPadding = Instance.new("UIPadding")
 	local SliderMainValue = Instance.new("TextLabel")
 	local SliderMainPadding_2 = Instance.new("UIPadding")
+
 	Slider.Name = "Slider"
 	Slider.Parent = inst
 	Slider.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -742,11 +442,13 @@ resources.slider = (function(inst)
 	Slider.BorderSizePixel = 0
 	Slider.Size = UDim2.new(1, 0, 0, 40)
 	Slider.AutomaticSize = Enum.AutomaticSize.Y
+
 	SliderPadding.Name = "SliderPadding"
 	SliderPadding.Parent = Slider
 	SliderPadding.PaddingBottom = UDim.new(0, -5)
 	SliderPadding.PaddingLeft = UDim.new(0, 5)
 	SliderPadding.PaddingRight = UDim.new(0, 5)
+
 	SliderMain.Name = "SliderMain"
 	SliderMain.Parent = Slider
 	SliderMain.BackgroundColor3 = Color3.fromRGB(28, 30, 31)
@@ -754,9 +456,11 @@ resources.slider = (function(inst)
 	SliderMain.BorderSizePixel = 0
 	SliderMain.Size = UDim2.new(1, 0, 1, 0)
 	SliderMain.AutomaticSize = Enum.AutomaticSize.Y
+
 	SliderMainCorner.CornerRadius = UDim.new(0, 3)
 	SliderMainCorner.Name = "SliderMainCorner"
 	SliderMainCorner.Parent = SliderMain
+
 	SliderMainText.Name = "SliderMainText"
 	SliderMainText.Parent = SliderMain
 	SliderMainText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -764,7 +468,7 @@ resources.slider = (function(inst)
 	SliderMainText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	SliderMainText.BorderSizePixel = 0
 	SliderMainText.Size = UDim2.new(1, -50, 0, 0)
-	SliderMainText.Font = Enum.Font.BuilderSansBold
+	SliderMainText.Font = Enum.Font.GothamBold
 	SliderMainText.Text = "Walkspeed"
 	SliderMainText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	SliderMainText.TextSize = 13.000
@@ -772,15 +476,18 @@ resources.slider = (function(inst)
 	SliderMainText.TextXAlignment = Enum.TextXAlignment.Left
 	SliderMainText.TextYAlignment = Enum.TextYAlignment.Bottom
 	SliderMainText.AutomaticSize = Enum.AutomaticSize.Y
+
 	SliderMainPadding.Name = "SliderMainPadding"
 	SliderMainPadding.Parent = SliderMain
 	SliderMainPadding.PaddingBottom = UDim.new(0, 5)
 	SliderMainPadding.PaddingLeft = UDim.new(0, 10)
 	SliderMainPadding.PaddingRight = UDim.new(0, 5)
 	SliderMainPadding.PaddingTop = UDim.new(0, 5)
+
 	SliderMainLayout.Name = "SliderMainLayout"
 	SliderMainLayout.Parent = SliderMain
 	SliderMainLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
 	SliderMainDesc.Name = "SliderMainDesc"
 	SliderMainDesc.Parent = SliderMain
 	SliderMainDesc.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -788,7 +495,7 @@ resources.slider = (function(inst)
 	SliderMainDesc.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	SliderMainDesc.BorderSizePixel = 0
 	SliderMainDesc.Size = UDim2.new(1, -50, 0, 0)
-	SliderMainDesc.Font = Enum.Font.BuilderSansBold
+	SliderMainDesc.Font = Enum.Font.GothamBold
 	SliderMainDesc.Text = "Adjusts your character walking speed."
 	SliderMainDesc.TextColor3 = Color3.fromRGB(141, 141, 141)
 	SliderMainDesc.TextSize = 11.000
@@ -796,6 +503,7 @@ resources.slider = (function(inst)
 	SliderMainDesc.TextXAlignment = Enum.TextXAlignment.Left
 	SliderMainDesc.TextYAlignment = Enum.TextYAlignment.Bottom
 	SliderMainDesc.AutomaticSize = Enum.AutomaticSize.Y
+
 	SliderMainFrame.Name = "SliderMainFrame"
 	SliderMainFrame.Parent = SliderMain
 	SliderMainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -803,6 +511,7 @@ resources.slider = (function(inst)
 	SliderMainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	SliderMainFrame.BorderSizePixel = 0
 	SliderMainFrame.Size = UDim2.new(1, 0, 0, 20)
+
 	SliderMainBar.Name = "SliderMainBar"
 	SliderMainBar.Parent = SliderMainFrame
 	SliderMainBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -811,18 +520,22 @@ resources.slider = (function(inst)
 	SliderMainBar.BorderSizePixel = 0
 	SliderMainBar.Position = UDim2.new(0, 0, 1, -12)
 	SliderMainBar.Size = UDim2.new(1, 0, 0, 5)
+
 	SliderMainBarCorner.CornerRadius = UDim.new(0, 2)
 	SliderMainBarCorner.Name = "SliderMainBarCorner"
 	SliderMainBarCorner.Parent = SliderMainBar
+
 	SliderMainBarFill.Name = "SliderMainBarFill"
 	SliderMainBarFill.Parent = SliderMainBar
 	SliderMainBarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
 	SliderMainBarFill.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	SliderMainBarFill.BorderSizePixel = 0
 	SliderMainBarFill.Size = UDim2.new(0, 0, 1, 0)
+
 	SliderMainBarFillCorner.CornerRadius = UDim.new(0, 2)
 	SliderMainBarFillCorner.Name = "SliderMainBarFillCorner"
 	SliderMainBarFillCorner.Parent = SliderMainBarFill
+
 	SliderMainBarFillCircle.Name = "SliderMainBarFillCircle"
 	SliderMainBarFillCircle.Parent = SliderMainBarFill
 	SliderMainBarFillCircle.AnchorPoint = Vector2.new(0, 0.5)
@@ -836,23 +549,28 @@ resources.slider = (function(inst)
 	SliderMainBarFillCircle.Text = ""
 	SliderMainBarFillCircle.TextColor3 = Color3.fromRGB(0, 0, 0)
 	SliderMainBarFillCircle.TextSize = 14.000
+
 	SliderMainBarFillCircleCorner.CornerRadius = UDim.new(0, 99)
 	SliderMainBarFillCircleCorner.Name = "SliderMainBarFillCircleCorner"
 	SliderMainBarFillCircleCorner.Parent = SliderMainBarFillCircle
+
 	SliderMainBarFillCircleStroke.Name = "SliderMainBarFillCircleStroke"
 	SliderMainBarFillCircleStroke.Parent = SliderMainBarFillCircle
 	SliderMainBarFillCircleStroke.Color = Color3.fromRGB(255, 255, 255)
 	SliderMainBarFillCircleStroke.Thickness = 2.000
 	SliderMainBarFillCircleStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
 	SliderMainBarFillCircleStrokeInner.Name = "SliderMainBarFillCircleStrokeInner"
 	SliderMainBarFillCircleStrokeInner.Parent = SliderMainBarFillCircle
 	SliderMainBarFillCircleStrokeInner.Color = Color3.fromRGB(255, 255, 255)
 	SliderMainBarFillCircleStrokeInner.Thickness = 0.000
 	SliderMainBarFillCircleStrokeInner.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	SliderMainBarFillCircleStrokeInner.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+
 	SliderMainBarFillPadding.Name = "SliderMainBarFillPadding"
 	SliderMainBarFillPadding.Parent = SliderMainBarFill
 	SliderMainBarFillPadding.PaddingLeft = UDim.new(0, 10)
+
 	SliderMainValue.Name = "SliderMainValue"
 	SliderMainValue.Parent = SliderMainBar
 	SliderMainValue.AnchorPoint = Vector2.new(1, 0)
@@ -862,16 +580,19 @@ resources.slider = (function(inst)
 	SliderMainValue.BorderSizePixel = 0
 	SliderMainValue.Position = UDim2.new(1, 0, 0, -20)
 	SliderMainValue.Size = UDim2.new(1, 0, 0, 13)
-	SliderMainValue.Font = Enum.Font.BuilderSansBold
+	SliderMainValue.Font = Enum.Font.GothamBold
 	SliderMainValue.Text = "123"
 	SliderMainValue.TextColor3 = Color3.fromRGB(175, 175, 175)
 	SliderMainValue.TextSize = 13.000
 	SliderMainValue.TextXAlignment = Enum.TextXAlignment.Right
+
 	SliderMainPadding_2.Name = "SliderMainPadding"
 	SliderMainPadding_2.Parent = SliderMainFrame
 	SliderMainPadding_2.PaddingRight = UDim.new(0, 5)
+
 	return combineall(Slider)
 end)
+
 resources.optionframe = (function(inst, enablesearchbar)
 	local Options = Instance.new("Frame")
 	local OptionsPadding = Instance.new("UIPadding")
@@ -884,6 +605,7 @@ resources.optionframe = (function(inst, enablesearchbar)
 	local OptionsFrame = Instance.new("Frame")
 	local OptionsFrameLayout = Instance.new("UIListLayout")
 	local OptionsFramePadding = Instance.new("UIPadding")
+
 	Options.Name = "Options"
 	Options.Parent = inst
 	Options.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -892,11 +614,13 @@ resources.optionframe = (function(inst, enablesearchbar)
 	Options.BorderSizePixel = 0
 	Options.Size = UDim2.new(1, 0, 0, 40)
 	Options.AutomaticSize = Enum.AutomaticSize.Y
+
 	OptionsPadding.Name = "OptionsPadding"
 	OptionsPadding.Parent = Options
 	OptionsPadding.PaddingBottom = UDim.new(0, -5)
 	OptionsPadding.PaddingLeft = UDim.new(0, 5)
 	OptionsPadding.PaddingRight = UDim.new(0, 5)
+
 	OptionsMain.Name = "OptionsMain"
 	OptionsMain.Parent = Options
 	OptionsMain.BackgroundColor3 = Color3.fromRGB(28, 30, 31)
@@ -904,9 +628,11 @@ resources.optionframe = (function(inst, enablesearchbar)
 	OptionsMain.BorderSizePixel = 0
 	OptionsMain.Size = UDim2.new(1, 0, 1, 0)
 	OptionsMain.AutomaticSize = Enum.AutomaticSize.Y
+
 	OptionsMainCorner.CornerRadius = UDim.new(0, 3)
 	OptionsMainCorner.Name = "OptionsMainCorner"
 	OptionsMainCorner.Parent = OptionsMain
+
 	OptionsMainText.Name = "OptionsMainText"
 	OptionsMainText.Parent = OptionsMain
 	OptionsMainText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -914,7 +640,7 @@ resources.optionframe = (function(inst, enablesearchbar)
 	OptionsMainText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	OptionsMainText.BorderSizePixel = 0
 	OptionsMainText.Size = UDim2.new(1, -50, 0, 0)
-	OptionsMainText.Font = Enum.Font.BuilderSansBold
+	OptionsMainText.Font = Enum.Font.GothamBold
 	OptionsMainText.Text = "Infinite Jump Mode"
 	OptionsMainText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	OptionsMainText.TextSize = 13.000
@@ -922,15 +648,18 @@ resources.optionframe = (function(inst, enablesearchbar)
 	OptionsMainText.TextXAlignment = Enum.TextXAlignment.Left
 	OptionsMainText.TextYAlignment = Enum.TextYAlignment.Bottom
 	OptionsMainText.AutomaticSize = Enum.AutomaticSize.Y
+
 	OptionsMainPadding.Name = "OptionsMainPadding"
 	OptionsMainPadding.Parent = OptionsMain
 	OptionsMainPadding.PaddingBottom = UDim.new(0, 5)
 	OptionsMainPadding.PaddingLeft = UDim.new(0, 10)
 	OptionsMainPadding.PaddingRight = UDim.new(0, 5)
 	OptionsMainPadding.PaddingTop = UDim.new(0, 5)
+
 	OptionsMainLayout.Name = "OptionsMainLayout"
 	OptionsMainLayout.Parent = OptionsMain
 	OptionsMainLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
 	OptionsMainDesc.Name = "OptionsMainDesc"
 	OptionsMainDesc.Parent = OptionsMain
 	OptionsMainDesc.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -939,7 +668,7 @@ resources.optionframe = (function(inst, enablesearchbar)
 	OptionsMainDesc.BorderSizePixel = 0
 	OptionsMainDesc.Position = UDim2.new(0, 0, 0.311475396, 0)
 	OptionsMainDesc.Size = UDim2.new(1, -10, 0, 0)
-	OptionsMainDesc.Font = Enum.Font.BuilderSansBold
+	OptionsMainDesc.Font = Enum.Font.GothamBold
 	OptionsMainDesc.Text = "Select different infinite jump method to use. Each of them behaves the same thing but just different ways."
 	OptionsMainDesc.TextColor3 = Color3.fromRGB(141, 141, 141)
 	OptionsMainDesc.TextSize = 11.000
@@ -947,11 +676,13 @@ resources.optionframe = (function(inst, enablesearchbar)
 	OptionsMainDesc.TextXAlignment = Enum.TextXAlignment.Left
 	OptionsMainDesc.TextYAlignment = Enum.TextYAlignment.Bottom
 	OptionsMainDesc.AutomaticSize = Enum.AutomaticSize.Y
+
 	if enablesearchbar then
 		local OptionsSearch = Instance.new("TextBox")
 		local OptionsSearchPadding = Instance.new("UIPadding")
 		local OptionsSearchCorner = Instance.new("UICorner")
 		local OptionsSearchStroke = Instance.new("UIStroke")
+
 		OptionsSearch.Name = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 		OptionsSearch.Parent = OptionsFrame
 		OptionsSearch.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -959,25 +690,29 @@ resources.optionframe = (function(inst, enablesearchbar)
 		OptionsSearch.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		OptionsSearch.BorderSizePixel = 0
 		OptionsSearch.Size = UDim2.new(1, -5, 0, 16)
-		OptionsSearch.Font = Enum.Font.BuilderSansBold
+		OptionsSearch.Font = Enum.Font.GothamBold
 		OptionsSearch.PlaceholderText = "Search..."
 		OptionsSearch.Text = ""
 		OptionsSearch.TextColor3 = Color3.fromRGB(200, 200, 200)
 		OptionsSearch.TextSize = 11.000
 		OptionsSearch.TextXAlignment = Enum.TextXAlignment.Left
 		OptionsSearch.LayoutOrder = -1
+
 		OptionsSearchPadding.Name = "OptionsSearchPadding"
 		OptionsSearchPadding.Parent = OptionsSearch
 		OptionsSearchPadding.PaddingLeft = UDim.new(0, 5)
+
 		OptionsSearchCorner.CornerRadius = UDim.new(0, 3)
 		OptionsSearchCorner.Name = "OptionsSearchCorner"
 		OptionsSearchCorner.Parent = OptionsSearch
+
 		OptionsSearchStroke.Name = "OptionsSearchStroke"
 		OptionsSearchStroke.Parent = OptionsSearch
 		OptionsSearchStroke.Color = Color3.fromRGB(55, 61, 62)
 		OptionsSearchStroke.Thickness = 2.000
 		OptionsSearchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	end
+
 	OptionsFrame.Name = "OptionsFrame"
 	OptionsFrame.Parent = OptionsMain
 	OptionsFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -986,6 +721,7 @@ resources.optionframe = (function(inst, enablesearchbar)
 	OptionsFrame.BorderSizePixel = 0
 	OptionsFrame.Size = UDim2.new(1, 0, 0, 0)
 	OptionsFrame.AutomaticSize = Enum.AutomaticSize.Y
+
 	OptionsFrameLayout.Name = "OptionsFrameLayout"
 	OptionsFrameLayout.Parent = OptionsFrame
 	OptionsFrameLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -993,18 +729,22 @@ resources.optionframe = (function(inst, enablesearchbar)
 	OptionsFrameLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 	OptionsFrameLayout.Padding = UDim.new(0, 7)
     OptionsFrameLayout.Wraps = true
+
 	OptionsFramePadding.Name = "OptionsFramePadding"
 	OptionsFramePadding.Parent = OptionsFrame
 	OptionsFramePadding.PaddingBottom = UDim.new(0, 5)
 	OptionsFramePadding.PaddingLeft = UDim.new(0, 1)
 	OptionsFramePadding.PaddingTop = UDim.new(0, 5)
+
 	return combineall(Options)
 end)
+
 resources.optionbutton = (function(inst)
 	local OptionsButton = Instance.new("TextButton")
 	local OptionsButtonPadding = Instance.new("UIPadding")
 	local OptionsButtonCorner = Instance.new("UICorner")
 	local OptionsButtonStroke = Instance.new("UIStroke")
+
 	OptionsButton.Name = "OptionsButton"
 	OptionsButton.Parent = inst
 	OptionsButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1013,26 +753,31 @@ resources.optionbutton = (function(inst)
 	OptionsButton.BorderSizePixel = 0
 	OptionsButton.Size = UDim2.new(0, 0, 0, 16)
 	OptionsButton.AutoButtonColor = false
-	OptionsButton.Font = Enum.Font.BuilderSansBold
+	OptionsButton.Font = Enum.Font.GothamBold
 	OptionsButton.Text = "Velocity"
 	OptionsButton.TextColor3 = Color3.fromRGB(170, 170, 170)
 	OptionsButton.TextSize = 10.000
 	OptionsButton.TextXAlignment = Enum.TextXAlignment.Left
 	OptionsButton.AutomaticSize = Enum.AutomaticSize.X
+
 	OptionsButtonPadding.Name = "OptionsButtonPadding"
 	OptionsButtonPadding.Parent = OptionsButton
 	OptionsButtonPadding.PaddingLeft = UDim.new(0, 3)
 	OptionsButtonPadding.PaddingRight = UDim.new(0, 3)
+
 	OptionsButtonCorner.CornerRadius = UDim.new(0, 2)
 	OptionsButtonCorner.Name = "OptionsButtonCorner"
 	OptionsButtonCorner.Parent = OptionsButton
+
 	OptionsButtonStroke.Name = "OptionsButtonStroke"
 	OptionsButtonStroke.Parent = OptionsButton
 	OptionsButtonStroke.Color = Color3.fromRGB(55, 61, 62)
 	OptionsButtonStroke.Thickness = 2.000
 	OptionsButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
 	return combineall(OptionsButton)
 end)
+
 resources.textbox = (function(inst)
 	local Textbox = Instance.new("Frame")
 	local TextboxPadding = Instance.new("UIPadding")
@@ -1049,6 +794,7 @@ resources.textbox = (function(inst)
 	local TextboxFrameBoxStroke = Instance.new("UIStroke")
 	local TextboxFrameBoxCorner = Instance.new("UICorner")
 	local TextboxFrameBoxPadding = Instance.new("UIPadding")
+
 	Textbox.Name = "Textbox"
 	Textbox.Parent = inst
 	Textbox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -1057,11 +803,13 @@ resources.textbox = (function(inst)
 	Textbox.BorderSizePixel = 0
 	Textbox.Size = UDim2.new(1, 0, 0, 0)
 	Textbox.AutomaticSize = Enum.AutomaticSize.Y
+
 	TextboxPadding.Name = "TextboxPadding"
 	TextboxPadding.Parent = Textbox
 	TextboxPadding.PaddingBottom = UDim.new(0, -5)
 	TextboxPadding.PaddingLeft = UDim.new(0, 5)
 	TextboxPadding.PaddingRight = UDim.new(0, 5)
+
 	TextboxMain.Name = "TextboxMain"
 	TextboxMain.Parent = Textbox
 	TextboxMain.BackgroundColor3 = Color3.fromRGB(28, 30, 31)
@@ -1069,9 +817,11 @@ resources.textbox = (function(inst)
 	TextboxMain.BorderSizePixel = 0
 	TextboxMain.Size = UDim2.new(1, 0, 1, 0)
 	TextboxMain.AutomaticSize = Enum.AutomaticSize.Y
+
 	TextboxMainCorner.CornerRadius = UDim.new(0, 3)
 	TextboxMainCorner.Name = "TextboxMainCorner"
 	TextboxMainCorner.Parent = TextboxMain
+
 	TextboxMainText.Name = "TextboxMainText"
 	TextboxMainText.Parent = TextboxMain
 	TextboxMainText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1079,7 +829,7 @@ resources.textbox = (function(inst)
 	TextboxMainText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	TextboxMainText.BorderSizePixel = 0
 	TextboxMainText.Size = UDim2.new(1, -50, 0, 0)
-	TextboxMainText.Font = Enum.Font.BuilderSansBold
+	TextboxMainText.Font = Enum.Font.GothamBold
 	TextboxMainText.Text = ""
 	TextboxMainText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	TextboxMainText.TextSize = 13.000
@@ -1087,15 +837,18 @@ resources.textbox = (function(inst)
 	TextboxMainText.TextXAlignment = Enum.TextXAlignment.Left
 	TextboxMainText.TextYAlignment = Enum.TextYAlignment.Bottom
 	TextboxMainText.AutomaticSize = Enum.AutomaticSize.Y
+
 	TextboxMainPadding.Name = "TextboxMainPadding"
 	TextboxMainPadding.Parent = TextboxMain
 	TextboxMainPadding.PaddingBottom = UDim.new(0, 5)
 	TextboxMainPadding.PaddingLeft = UDim.new(0, 10)
 	TextboxMainPadding.PaddingRight = UDim.new(0, 5)
 	TextboxMainPadding.PaddingTop = UDim.new(0, 5)
+
 	TextboxMainLayout.Name = "TextboxMainLayout"
 	TextboxMainLayout.Parent = TextboxMain
 	TextboxMainLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
 	TextboxMainDesc.Name = "TextboxMainDesc"
 	TextboxMainDesc.Parent = TextboxMain
 	TextboxMainDesc.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1104,7 +857,7 @@ resources.textbox = (function(inst)
 	TextboxMainDesc.BorderSizePixel = 0
 	TextboxMainDesc.Position = UDim2.new(0, 0, 0.311475396, 0)
 	TextboxMainDesc.Size = UDim2.new(1, -10, 0, 0)
-	TextboxMainDesc.Font = Enum.Font.BuilderSansBold
+	TextboxMainDesc.Font = Enum.Font.GothamBold
 	TextboxMainDesc.Text = ""
 	TextboxMainDesc.TextColor3 = Color3.fromRGB(141, 141, 141)
 	TextboxMainDesc.TextSize = 11.000
@@ -1112,6 +865,7 @@ resources.textbox = (function(inst)
 	TextboxMainDesc.TextXAlignment = Enum.TextXAlignment.Left
 	TextboxMainDesc.TextYAlignment = Enum.TextYAlignment.Bottom
 	TextboxMainDesc.AutomaticSize = Enum.AutomaticSize.Y
+
 	TextboxFrame.Name = "TextboxFrame"
 	TextboxFrame.Parent = TextboxMain
 	TextboxFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1120,17 +874,20 @@ resources.textbox = (function(inst)
 	TextboxFrame.BorderSizePixel = 0
 	TextboxFrame.Size = UDim2.new(1, 0, 0, 0)
 	TextboxFrame.AutomaticSize = Enum.AutomaticSize.Y
+
 	TextboxFrameLayout.Name = "TextboxFrameLayout"
 	TextboxFrameLayout.Parent = TextboxFrame
 	TextboxFrameLayout.FillDirection = Enum.FillDirection.Horizontal
 	TextboxFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	TextboxFrameLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 	TextboxFrameLayout.Padding = UDim.new(0, 7)
+
 	TextboxFramePadding.Name = "TextboxFramePadding"
 	TextboxFramePadding.Parent = TextboxFrame
 	TextboxFramePadding.PaddingBottom = UDim.new(0, 5)
 	TextboxFramePadding.PaddingLeft = UDim.new(0, 1)
 	TextboxFramePadding.PaddingTop = UDim.new(0, 5)
+
 	TextboxFrameBox.Name = "TextboxFrameBox"
 	TextboxFrameBox.Parent = TextboxFrame
 	TextboxFrameBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -1139,7 +896,7 @@ resources.textbox = (function(inst)
 	TextboxFrameBox.BorderSizePixel = 0
 	TextboxFrameBox.Size = UDim2.new(1, -8, 0, 16)
 	TextboxFrameBox.ClearTextOnFocus = false
-	TextboxFrameBox.Font = Enum.Font.BuilderSansBold
+	TextboxFrameBox.Font = Enum.Font.GothamBold
 	TextboxFrameBox.PlaceholderColor3 = Color3.fromRGB(144, 144, 144)
 	TextboxFrameBox.PlaceholderText = "Type here..."
 	TextboxFrameBox.Text = ""
@@ -1148,22 +905,27 @@ resources.textbox = (function(inst)
 	TextboxFrameBox.TextWrapped = true
 	TextboxFrameBox.TextXAlignment = Enum.TextXAlignment.Left
 	TextboxFrameBox.AutomaticSize = Enum.AutomaticSize.Y
+
 	TextboxFrameBoxStroke.Name = "TextboxFrameBoxStroke"
 	TextboxFrameBoxStroke.Parent = TextboxFrameBox
 	TextboxFrameBoxStroke.Color = Color3.fromRGB(55, 61, 62)
 	TextboxFrameBoxStroke.Thickness = 2.000
 	TextboxFrameBoxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
 	TextboxFrameBoxCorner.CornerRadius = UDim.new(0, 2)
 	TextboxFrameBoxCorner.Name = "TextboxFrameBoxCorner"
 	TextboxFrameBoxCorner.Parent = TextboxFrameBox
+
 	TextboxFrameBoxPadding.Name = "TextboxFrameBoxPadding"
 	TextboxFrameBoxPadding.Parent = TextboxFrameBox
 	TextboxFrameBoxPadding.PaddingBottom = UDim.new(0, 2)
 	TextboxFrameBoxPadding.PaddingLeft = UDim.new(0, 5)
 	TextboxFrameBoxPadding.PaddingRight = UDim.new(0, 1)
 	TextboxFrameBoxPadding.PaddingTop = UDim.new(0, 2)
+
 	return combineall(Textbox)
 end)
+
 resources.dropdown = (function(inst, enablesearchbar, ismulti)
 	local Dropdown = Instance.new("Frame")
 	local DropdownPadding = Instance.new("UIPadding")
@@ -1173,19 +935,24 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 	local DropdownMainPadding = Instance.new("UIPadding")
 	local DropdownMainLayout = Instance.new("UIListLayout")
 	local DropdownMainDesc = Instance.new("TextLabel")
+	
 	local DropdownFrame = Instance.new("Frame")
 	local DropdownFrameLayout = Instance.new("UIListLayout")
 	local DropdownFramePadding = Instance.new("UIPadding")
+	
 	local DropdownBox = Instance.new("Frame")
 	local DropdownBoxStroke = Instance.new("UIStroke")
 	local DropdownBoxCorner = Instance.new("UICorner")
 	local DropdownBoxLayout = Instance.new("UIListLayout")
+	
 	local DropdownButton = Instance.new("TextButton")
 	local DropdownButtonPadding = Instance.new("UIPadding")
 	local DropdownButtonIcon = Instance.new("ImageLabel")
+
 	local DropdownList = Instance.new("ScrollingFrame")
 	local DropdownListLayout = Instance.new("UIListLayout")
 	local DropdownListPadding = Instance.new("UIPadding")
+
 	Dropdown.Name = "Dropdown"
 	Dropdown.Parent = inst
 	Dropdown.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -1193,11 +960,13 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 	Dropdown.BorderSizePixel = 0
 	Dropdown.Size = UDim2.new(1, 0, 0, 0)
 	Dropdown.AutomaticSize = Enum.AutomaticSize.Y
+
 	DropdownPadding.Name = "DropdownPadding"
 	DropdownPadding.Parent = Dropdown
 	DropdownPadding.PaddingBottom = UDim.new(0, -5)
 	DropdownPadding.PaddingLeft = UDim.new(0, 5)
 	DropdownPadding.PaddingRight = UDim.new(0, 5)
+
 	DropdownMain.Name = "DropdownMain"
 	DropdownMain.Parent = Dropdown
 	DropdownMain.BackgroundColor3 = Color3.fromRGB(28, 30, 31)
@@ -1205,49 +974,58 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 	DropdownMain.Size = UDim2.new(1, 0, 1, 0)
 	DropdownMain.AutomaticSize = Enum.AutomaticSize.Y
 	DropdownMain.ClipsDescendants = true
+
 	DropdownMainCorner.CornerRadius = UDim.new(0, 3)
 	DropdownMainCorner.Parent = DropdownMain
+
 	DropdownMainText.Name = "DropdownMainText"
 	DropdownMainText.Parent = DropdownMain
 	DropdownMainText.BackgroundTransparency = 1.000
 	DropdownMainText.Size = UDim2.new(1, -50, 0, 0)
-	DropdownMainText.Font = Enum.Font.BuilderSansBold
+	DropdownMainText.Font = Enum.Font.GothamBold
 	DropdownMainText.TextColor3 = Color3.fromRGB(200, 200, 200)
 	DropdownMainText.TextSize = 13.000
 	DropdownMainText.TextXAlignment = Enum.TextXAlignment.Left
 	DropdownMainText.AutomaticSize = Enum.AutomaticSize.Y
 	DropdownMainText.LayoutOrder = 1
+
 	DropdownMainPadding.Parent = DropdownMain
 	DropdownMainPadding.PaddingBottom = UDim.new(0, 5)
 	DropdownMainPadding.PaddingLeft = UDim.new(0, 10)
 	DropdownMainPadding.PaddingRight = UDim.new(0, 5)
 	DropdownMainPadding.PaddingTop = UDim.new(0, 5)
+
 	DropdownMainLayout.Parent = DropdownMain
 	DropdownMainLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	DropdownMainLayout.Padding = UDim.new(0, 0)
+
 	DropdownMainDesc.Name = "DropdownMainDesc"
 	DropdownMainDesc.Parent = DropdownMain
 	DropdownMainDesc.BackgroundTransparency = 1.000
 	DropdownMainDesc.Size = UDim2.new(1, -10, 0, 0)
-	DropdownMainDesc.Font = Enum.Font.BuilderSansBold
+	DropdownMainDesc.Font = Enum.Font.GothamBold
 	DropdownMainDesc.TextColor3 = Color3.fromRGB(141, 141, 141)
 	DropdownMainDesc.TextSize = 11.000
 	DropdownMainDesc.TextWrapped = true
 	DropdownMainDesc.TextXAlignment = Enum.TextXAlignment.Left
 	DropdownMainDesc.AutomaticSize = Enum.AutomaticSize.Y
 	DropdownMainDesc.LayoutOrder = 2
+
 	DropdownFrame.Name = "DropdownFrame"
 	DropdownFrame.Parent = DropdownMain
 	DropdownFrame.BackgroundTransparency = 1.000
 	DropdownFrame.Size = UDim2.new(1, 0, 0, 0)
 	DropdownFrame.AutomaticSize = Enum.AutomaticSize.Y
 	DropdownFrame.LayoutOrder = 3
+	
 	DropdownFrameLayout.Parent = DropdownFrame
 	DropdownFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	
 	DropdownFramePadding.Parent = DropdownFrame
 	DropdownFramePadding.PaddingBottom = UDim.new(0, 5)
 	DropdownFramePadding.PaddingLeft = UDim.new(0, 1)
 	DropdownFramePadding.PaddingTop = UDim.new(0, 5)
+
 	DropdownBox.Name = "DropdownBox"
 	DropdownBox.Parent = DropdownFrame
 	DropdownBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -1256,18 +1034,22 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 	DropdownBox.Size = UDim2.new(1, -8, 0, 20)
 	DropdownBox.ClipsDescendants = true
 	DropdownBox.LayoutOrder = 1
+	
 	DropdownBoxCorner.CornerRadius = UDim.new(0, 2)
 	DropdownBoxCorner.Parent = DropdownBox
+
 	DropdownBoxStroke.Color = Color3.fromRGB(55, 61, 62)
 	DropdownBoxStroke.Thickness = 2.000
 	DropdownBoxStroke.Parent = DropdownBox
+	
 	DropdownBoxLayout.Parent = DropdownBox
 	DropdownBoxLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
 	DropdownButton.Name = "DropdownButton"
 	DropdownButton.Parent = DropdownBox
 	DropdownButton.BackgroundTransparency = 1.000
 	DropdownButton.Size = UDim2.new(1, 0, 0, 20)
-	DropdownButton.Font = Enum.Font.BuilderSansBold
+	DropdownButton.Font = Enum.Font.GothamBold
 	DropdownButton.Text = "Select Option..."
 	DropdownButton.TextColor3 = Color3.fromRGB(200, 200, 200)
 	DropdownButton.TextSize = 10.000
@@ -1276,11 +1058,13 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 	DropdownButton.LayoutOrder = 1
 	DropdownButton.TextWrapped = true
 	DropdownButton.AutomaticSize = Enum.AutomaticSize.Y
+	
 	DropdownButtonPadding.Parent = DropdownButton
 	DropdownButtonPadding.PaddingBottom = UDim.new(0, 2)
 	DropdownButtonPadding.PaddingLeft = UDim.new(0, 5)
 	DropdownButtonPadding.PaddingRight = UDim.new(0, 18)
 	DropdownButtonPadding.PaddingTop = UDim.new(0, 2)
+
 	DropdownButtonIcon.Name = "DropdownButtonIcon"
 	DropdownButtonIcon.Parent = DropdownButton
 	DropdownButtonIcon.AnchorPoint = Vector2.new(1, 0.5)
@@ -1289,6 +1073,7 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 	DropdownButtonIcon.Size = UDim2.new(0, 12, 0, 12)
 	DropdownButtonIcon.Image = "rbxassetid://6031090401"
 	DropdownButtonIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
+
 	if enablesearchbar then
 		local DropdownSearchContainer = Instance.new("Frame")
 		DropdownSearchContainer.Name = "DropdownSearchContainer"
@@ -1296,12 +1081,14 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 		DropdownSearchContainer.BackgroundTransparency = 1.000
 		DropdownSearchContainer.Size = UDim2.new(1, 0, 0, 20)
 		DropdownSearchContainer.LayoutOrder = 2
+
 		local DropdownSearchDividerTop = Instance.new("Frame")
 		DropdownSearchDividerTop.Name = "DropdownSearchDividerTop"
 		DropdownSearchDividerTop.Parent = DropdownSearchContainer
 		DropdownSearchDividerTop.BackgroundColor3 = Color3.fromRGB(55, 61, 62)
 		DropdownSearchDividerTop.BorderSizePixel = 0
 		DropdownSearchDividerTop.Size = UDim2.new(1, 0, 0, 1)
+
 		local DropdownSearchDividerBottom = Instance.new("Frame")
 		DropdownSearchDividerBottom.Name = "DropdownSearchDividerBottom"
 		DropdownSearchDividerBottom.Parent = DropdownSearchContainer
@@ -1309,9 +1096,11 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 		DropdownSearchDividerBottom.BorderSizePixel = 0
 		DropdownSearchDividerBottom.Position = UDim2.new(0, 0, 1, -1)
 		DropdownSearchDividerBottom.Size = UDim2.new(1, 0, 0, 1)
+		
 		if ismulti then
 			DropdownSearchDividerBottom.Visible = false
 		end
+
 		local DropdownSearchIcon = Instance.new("ImageLabel")
 		DropdownSearchIcon.Name = "DropdownSearchIcon"
 		DropdownSearchIcon.Parent = DropdownSearchContainer
@@ -1321,13 +1110,14 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 		DropdownSearchIcon.Size = UDim2.new(0, 12, 0, 12)
 		DropdownSearchIcon.Image = "rbxassetid://6031154871" 
 		DropdownSearchIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
+
 		local DropdownSearch = Instance.new("TextBox")
 		DropdownSearch.Name = "DropdownSearch"
 		DropdownSearch.Parent = DropdownSearchContainer
 		DropdownSearch.BackgroundTransparency = 1.000
 		DropdownSearch.Position = UDim2.new(0, 0, 0, 1)
 		DropdownSearch.Size = UDim2.new(1, 0, 1, -2)
-		DropdownSearch.Font = Enum.Font.BuilderSansBold
+		DropdownSearch.Font = Enum.Font.GothamBold
 		DropdownSearch.PlaceholderText = "Search..."
 		DropdownSearch.PlaceholderColor3 = Color3.fromRGB(144, 144, 144)
 		DropdownSearch.Text = ""
@@ -1335,11 +1125,14 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 		DropdownSearch.TextSize = 10.000
 		DropdownSearch.TextXAlignment = Enum.TextXAlignment.Left
 		DropdownSearch.ClearTextOnFocus = false
+
 		local DropdownSearchPadding = Instance.new("UIPadding")
 		DropdownSearchPadding.Parent = DropdownSearch
 		DropdownSearchPadding.PaddingLeft = UDim.new(0, 22)
 		DropdownSearchPadding.PaddingRight = UDim.new(0, 5)
 	end
+
+	-- FIXED: Switched to Absolute Positioning so the dividers don't break!
 	if ismulti then
 		local DropdownActionContainer = Instance.new("Frame")
 		DropdownActionContainer.Name = "DropdownActionContainer"
@@ -1347,12 +1140,14 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 		DropdownActionContainer.BackgroundTransparency = 1.000
 		DropdownActionContainer.Size = UDim2.new(1, 0, 0, 20)
 		DropdownActionContainer.LayoutOrder = 3
+
 		local DropdownActionDividerTop = Instance.new("Frame")
 		DropdownActionDividerTop.Name = "DropdownActionDividerTop"
 		DropdownActionDividerTop.Parent = DropdownActionContainer
 		DropdownActionDividerTop.BackgroundColor3 = Color3.fromRGB(55, 61, 62)
 		DropdownActionDividerTop.BorderSizePixel = 0
 		DropdownActionDividerTop.Size = UDim2.new(1, 0, 0, 1)
+
 		local DropdownActionDividerBottom = Instance.new("Frame")
 		DropdownActionDividerBottom.Name = "DropdownActionDividerBottom"
 		DropdownActionDividerBottom.Parent = DropdownActionContainer
@@ -1360,16 +1155,19 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 		DropdownActionDividerBottom.BorderSizePixel = 0
 		DropdownActionDividerBottom.Position = UDim2.new(0, 0, 1, -1)
 		DropdownActionDividerBottom.Size = UDim2.new(1, 0, 0, 1)
+
 		local DropdownSelectAll = Instance.new("TextButton")
 		DropdownSelectAll.Name = "DropdownSelectAll"
 		DropdownSelectAll.Parent = DropdownActionContainer
 		DropdownSelectAll.BackgroundTransparency = 1.000
 		DropdownSelectAll.Position = UDim2.new(0, 0, 0, 0)
 		DropdownSelectAll.Size = UDim2.new(0.5, 0, 1, 0)
-		DropdownSelectAll.Font = Enum.Font.BuilderSansBold
+		DropdownSelectAll.Font = Enum.Font.GothamBold
 		DropdownSelectAll.Text = "Select All"
 		DropdownSelectAll.TextColor3 = Color3.fromRGB(170, 170, 170)
 		DropdownSelectAll.TextSize = 10.000
+
+		-- Slick 1-pixel divider right down the center
 		local DropdownActionCenterDivider = Instance.new("Frame")
 		DropdownActionCenterDivider.Name = "DropdownActionCenterDivider"
 		DropdownActionCenterDivider.Parent = DropdownSelectAll
@@ -1378,17 +1176,19 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 		DropdownActionCenterDivider.BorderSizePixel = 0
 		DropdownActionCenterDivider.Position = UDim2.new(1, 0, 0.5, 0)
 		DropdownActionCenterDivider.Size = UDim2.new(0, 1, 1, -6)
+
 		local DropdownDeselectAll = Instance.new("TextButton")
 		DropdownDeselectAll.Name = "DropdownDeselectAll"
 		DropdownDeselectAll.Parent = DropdownActionContainer
 		DropdownDeselectAll.BackgroundTransparency = 1.000
 		DropdownDeselectAll.Position = UDim2.new(0.5, 0, 0, 0)
 		DropdownDeselectAll.Size = UDim2.new(0.5, 0, 1, 0)
-		DropdownDeselectAll.Font = Enum.Font.BuilderSansBold
+		DropdownDeselectAll.Font = Enum.Font.GothamBold
 		DropdownDeselectAll.Text = "Deselect All"
 		DropdownDeselectAll.TextColor3 = Color3.fromRGB(170, 170, 170)
 		DropdownDeselectAll.TextSize = 10.000
 	end
+
 	DropdownList.Name = "DropdownList"
 	DropdownList.Parent = DropdownBox
 	DropdownList.BackgroundTransparency = 1.000
@@ -1396,20 +1196,25 @@ resources.dropdown = (function(inst, enablesearchbar, ismulti)
 	DropdownList.ScrollBarThickness = 2
 	DropdownList.ScrollBarImageColor3 = Color3.fromRGB(55, 61, 62)
 	DropdownList.LayoutOrder = 4 
+
 	DropdownListLayout.Parent = DropdownList
 	DropdownListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	DropdownListLayout.Padding = UDim.new(0, 2)
+
 	DropdownListPadding.Parent = DropdownList
 	DropdownListPadding.PaddingBottom = UDim.new(0, 2)
 	DropdownListPadding.PaddingLeft = UDim.new(0, 2)
 	DropdownListPadding.PaddingRight = UDim.new(0, 2)
 	DropdownListPadding.PaddingTop = UDim.new(0, 2)
+
 	return combineall(Dropdown)
 end)
+
 resources.dropdownoption = (function(inst)
 	local OptionButton = Instance.new("TextButton")
 	local OptionButtonCorner = Instance.new("UICorner")
 	local OptionButtonPadding = Instance.new("UIPadding")
+
 	OptionButton.Name = "OptionButton"
 	OptionButton.Parent = inst
 	OptionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1418,20 +1223,24 @@ resources.dropdownoption = (function(inst)
 	OptionButton.BorderSizePixel = 0
 	OptionButton.Size = UDim2.new(1, 0, 0, 16)
 	OptionButton.AutoButtonColor = false
-	OptionButton.Font = Enum.Font.BuilderSansBold
+	OptionButton.Font = Enum.Font.GothamBold
 	OptionButton.Text = "Option"
 	OptionButton.TextColor3 = Color3.fromRGB(170, 170, 170)
 	OptionButton.TextSize = 10.000
 	OptionButton.TextXAlignment = Enum.TextXAlignment.Left
+
 	OptionButtonCorner.CornerRadius = UDim.new(0, 2)
 	OptionButtonCorner.Name = "OptionButtonCorner"
 	OptionButtonCorner.Parent = OptionButton
+
 	OptionButtonPadding.Name = "OptionButtonPadding"
 	OptionButtonPadding.Parent = OptionButton
 	OptionButtonPadding.PaddingLeft = UDim.new(0, 5)
 	OptionButtonPadding.PaddingRight = UDim.new(0, 5)
+
 	return combineall(OptionButton)
 end)
+
 resources.section = (function(inst)
 	local Section = Instance.new("Frame")
 	local SectionCorner = Instance.new("UICorner")
@@ -1444,6 +1253,7 @@ resources.section = (function(inst)
 	local SectionTopbarFrameDesc = Instance.new("TextLabel")
 	local SectionStroke = Instance.new("UIStroke")
 	local SectionLayout = Instance.new("UIListLayout")
+
 	Section.Name = "Section"
 	Section.Parent = inst
 	Section.BackgroundColor3 = Color3.fromRGB(28, 30, 31)
@@ -1452,9 +1262,11 @@ resources.section = (function(inst)
 	Section.BorderSizePixel = 0
 	Section.ClipsDescendants = true
 	Section.Size = UDim2.new(1, 0, 0, 313)
+
 	SectionCorner.CornerRadius = UDim.new(0, 5)
 	SectionCorner.Name = "SectionCorner"
 	SectionCorner.Parent = Section
+
 	SectionTopbar.Name = "SectionTopbar"
 	SectionTopbar.Parent = Section
 	SectionTopbar.BackgroundColor3 = Color3.fromRGB(28, 30, 31)
@@ -1462,6 +1274,7 @@ resources.section = (function(inst)
 	SectionTopbar.BorderSizePixel = 0
 	SectionTopbar.Size = UDim2.new(1, 0, 0, 0)
 	SectionTopbar.AutomaticSize = Enum.AutomaticSize.Y
+
 	SectionTopbarFrame.Name = "SectionTopbarFrame"
 	SectionTopbarFrame.Parent = SectionTopbar
 	SectionTopbarFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -1470,9 +1283,11 @@ resources.section = (function(inst)
 	SectionTopbarFrame.BorderSizePixel = 0
 	SectionTopbarFrame.Size = UDim2.new(1, 0, 1, 0)
 	SectionTopbarFrame.AutomaticSize = Enum.AutomaticSize.Y
+
 	SectionTopbarFrameCorner.CornerRadius = UDim.new(0, 3)
 	SectionTopbarFrameCorner.Name = "SectionTopbarFrameCorner"
 	SectionTopbarFrameCorner.Parent = SectionTopbarFrame
+
 	SectionTopbarFrameTitle.Name = "SectionTopbarFrameTitle"
 	SectionTopbarFrameTitle.Parent = SectionTopbarFrame
 	SectionTopbarFrameTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1480,22 +1295,25 @@ resources.section = (function(inst)
 	SectionTopbarFrameTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	SectionTopbarFrameTitle.BorderSizePixel = 0
 	SectionTopbarFrameTitle.Size = UDim2.new(1, 0, 0, 19)
-	SectionTopbarFrameTitle.Font = Enum.Font.BuilderSansBold
+	SectionTopbarFrameTitle.Font = Enum.Font.GothamBold
 	SectionTopbarFrameTitle.Text = "Humanoid"
 	SectionTopbarFrameTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
 	SectionTopbarFrameTitle.TextSize = 13.000
 	SectionTopbarFrameTitle.TextWrapped = true
 	SectionTopbarFrameTitle.TextXAlignment = Enum.TextXAlignment.Left
 	SectionTopbarFrameTitle.TextYAlignment = Enum.TextYAlignment.Bottom
+
 	SectionTopbarFramePadding.Name = "SectionTopbarFramePadding"
 	SectionTopbarFramePadding.Parent = SectionTopbarFrame
 	SectionTopbarFramePadding.PaddingBottom = UDim.new(0, 10)
 	SectionTopbarFramePadding.PaddingLeft = UDim.new(0, 10)
 	SectionTopbarFramePadding.PaddingRight = UDim.new(0, 10)
+
 	SectionTopbarFrameLayout.Name = "SectionTopbarFrameLayout"
 	SectionTopbarFrameLayout.Parent = SectionTopbarFrame
 	SectionTopbarFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	SectionTopbarFrameLayout.Padding = UDim.new(0, 2)
+
 	SectionTopbarFrameDesc.Name = "SectionTopbarFrameDesc"
 	SectionTopbarFrameDesc.Parent = SectionTopbarFrame
 	SectionTopbarFrameDesc.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1503,7 +1321,7 @@ resources.section = (function(inst)
 	SectionTopbarFrameDesc.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	SectionTopbarFrameDesc.BorderSizePixel = 0
 	SectionTopbarFrameDesc.Size = UDim2.new(1, 0, 0, 0)
-	SectionTopbarFrameDesc.Font = Enum.Font.BuilderSansBold
+	SectionTopbarFrameDesc.Font = Enum.Font.GothamBold
 	SectionTopbarFrameDesc.Text = "Character related features."
 	SectionTopbarFrameDesc.TextColor3 = Color3.fromRGB(141, 141, 141)
 	SectionTopbarFrameDesc.TextSize = 11.000
@@ -1511,15 +1329,19 @@ resources.section = (function(inst)
 	SectionTopbarFrameDesc.TextXAlignment = Enum.TextXAlignment.Left
 	SectionTopbarFrameDesc.TextYAlignment = Enum.TextYAlignment.Top
 	SectionTopbarFrameDesc.AutomaticSize = Enum.AutomaticSize.Y
+
 	SectionStroke.Name = "SectionStroke"
 	SectionStroke.Parent = Section
 	SectionStroke.Color = Color3.fromRGB(28, 30, 31)
+
 	SectionLayout.Name = "SectionLayout"
 	SectionLayout.Parent = Section
 	SectionLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	SectionLayout.Padding = UDim.new(0, 5)
+
 	return combineall(Section)
 end)
+
 elements.toggle = (function(inst, con)
 	con = con or {}
 	con.Name = con.Name or "tthis is good toggle"
@@ -1527,15 +1349,18 @@ elements.toggle = (function(inst, con)
 	con.Callback = con.Callback or function(a) print(a) end
 	con.Flags = con.Flags or con.Name:gsub(" ", "")
 	con.Options = con.Options or nil
+
 	local toggle = resources.toggle(inst)
 	local togglefunctions = {}
 	local toggled = false
+
 	toggle.ToggleMainText.Text = con.Name
 	if con.Desc then
 		toggle.ToggleMainDesc.Text = con.Desc
 	else
 		toggle.ToggleMainDesc.Visible = false
 	end
+
 	togglefunctions.Toggle = (function()
 		if not toggled then
 			game.TweenService:Create(toggle.SwitchFrameCircle, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -20, 0.5, 0)}):Play()
@@ -1550,26 +1375,24 @@ elements.toggle = (function(inst, con)
 		end)
 		toggle.SwitchFrameStatus.Text = toggled and "On" or "Off"
 	end)
-	togglefunctions.Set = (function(state)
-		if typeof(state) ~= "boolean" then
-			togglefunctions.Toggle()
-			return
-		end
-		if toggled ~= state then
-			togglefunctions.Toggle()
-		end
-	end)
+
+	togglefunctions.Set = togglefunctions.Toggle
+
 	togglefunctions.SetDesc = (function(a)
 		toggle.ToggleMainDesc.Text = a
 	end)
+
 	toggle.SwitchFrame.MouseButton1Click:Connect(function()
-		togglefunctions.Toggle()
+		togglefunctions.Set()
 	end)
+
 	if con.Default then
-		togglefunctions.Set(true)
+		togglefunctions.Toggle()
 	end
+
 	return togglefunctions
 end)
+
 elements.slider = (function(inst, con)
 	con = con or {}
 	con.Name = con.Name or "slider"
@@ -1581,8 +1404,10 @@ elements.slider = (function(inst, con)
 	con.Flags = con.Flags or con.Name:gsub(" ", "")
 	con.Prefix = con.Prefix or ""
 	con.Callback = con.Callback or function(a)  end
+
 	local slider = resources.slider(inst)
 	local sliderfunctions = {}
+
 	slider.SliderMainText.Text = con.Name
 	slider.SliderMainDesc.Text = con.Desc
 	if con.Desc then
@@ -1590,6 +1415,7 @@ elements.slider = (function(inst, con)
 	else
 		slider.SliderMainDesc.Visible = false
 	end
+
 	local mouse = game:GetService("Players").LocalPlayer:GetMouse()
 	local uis = game:GetService("UserInputService")
 	local Min_Value = con.Min
@@ -1600,6 +1426,7 @@ elements.slider = (function(inst, con)
 	local DefaultValue = con.Default
 	local isSliding = false
 	local sliderFormat = "%."..tostring(con.Round or 0).."f"
+
 	if DefaultValue then 
 		if DefaultValue <= Min_Value then 
 			DefaultValue = Min_Value 
@@ -1610,12 +1437,14 @@ elements.slider = (function(inst, con)
 		Sliderbox.Text = tostring(DefaultValue).. con.Prefix
 		con.Callback(DefaultValue)
 	end
+
 	Trigger.MouseButton1Down:Connect(function()
 		isSliding = true
 		local value = tonumber(string.format(sliderFormat,(((Max_Value - Min_Value) / (slider.SliderMainBar.AbsoluteSize.X - 0)) * Bar.AbsoluteSize.X) + tonumber(Min_Value)))
 		pcall(function()
 			con.Callback(value)
 			Sliderbox.Text = tostring(value).. con.Prefix
+			--CONFIG[name][con.Name] = value
 		end)
 		Bar.Size = UDim2.new(0, math.clamp(mouse.X - Bar.AbsolutePosition.X, 0, (slider.SliderMainBar.AbsoluteSize.X + 0)), 0, slider.SliderMainBar.AbsoluteSize.Y)
 		game.TweenService:Create(slider.SliderMainBarFillCircleStrokeInner, TweenInfo.new(1, Enum.EasingStyle.Quart), {Thickness = 20}):Play()
@@ -1624,6 +1453,7 @@ elements.slider = (function(inst, con)
 			pcall(function()
 				con.Callback(value)
 				Sliderbox.Text = tostring(value).. con.Prefix
+				--CONFIG[name][con.Name] = value
 			end)
 			Bar.Size = UDim2.new(0, math.clamp(mouse.X - Bar.AbsolutePosition.X, 0, (slider.SliderMainBar.AbsoluteSize.X + 0)), 0, slider.SliderMainBar.AbsoluteSize.Y)
 		end)
@@ -1633,6 +1463,7 @@ elements.slider = (function(inst, con)
 				pcall(function()
 					con.Callback(value)
 					Sliderbox.Text = tostring(value).. con.Prefix
+					--CONFIG[name][con.Name] = value
 				end)
 				Bar.Size = UDim2.new(0, math.clamp(mouse.X - Bar.AbsolutePosition.X, 0, (slider.SliderMainBar.AbsoluteSize.X + 0)), 0, slider.SliderMainBar.AbsoluteSize.Y)
 			end
@@ -1646,6 +1477,7 @@ elements.slider = (function(inst, con)
 			end
 		end)
 	end)
+
 	sliderfunctions.Set = (function(val)
 		DefaultValue = val
 		if DefaultValue <= Min_Value then 
@@ -1657,8 +1489,10 @@ elements.slider = (function(inst, con)
 		Sliderbox.Text = tostring(DefaultValue).. con.Prefix
 		con.Callback(DefaultValue)
 	end)
+
 	return sliderfunctions
 end)
+
 elements.options = (function(inst, con)
 	con = con or {}
 	con.Name = con.Name or "sadasd"
@@ -1669,9 +1503,11 @@ elements.options = (function(inst, con)
 	con.Default = con.Default or (con.Multi and {} or "")
 	con.Callback = con.Callback or function(a) print(a) end
 	con.OnMaximumCallback = con.OnMaximumCallback or function() end
+
 	local optionframe = resources.optionframe(inst, con.EnableSearchbar)
 	local optionsdata = {}
 	local optionfunctions = {}
+
 	if con.EnableSearchbar then
 		optionframe.OptionsFrame:FindFirstChildOfClass("TextBox"):GetPropertyChangedSignal("Text"):Connect(function()
 			local text = optionframe.OptionsFrame:FindFirstChildOfClass("TextBox").Text:lower()
@@ -1682,6 +1518,7 @@ elements.options = (function(inst, con)
 			end
 		end)
 	end
+
     optionfunctions.AddOption = (function(optionnname, callback)
         callback = callback or function() end
         local optionbutton = resources.optionbutton(optionframe.OptionsFrame)
@@ -1699,6 +1536,8 @@ elements.options = (function(inst, con)
             else
                 table.insert(optionsdata, optionbutton.OptionsButton.Text)
             end
+            -- print(typeof(optionsdata))
+            -- print("amount of options: ", #optionsdata)
 			if con.MaximumSelected and con.Multi then
 				if #optionsdata > con.MaximumSelected then
 					con.OnMaximumCallback()
@@ -1730,25 +1569,30 @@ elements.options = (function(inst, con)
             optionfunctions.AddOption(v, callback)
         end
     end)
+
 	optionframe.OptionsMainText.Text = con.Name
 	if con.Desc then
 		optionframe.OptionsMainDesc.Text = con.Desc
 	else
 		optionframe.OptionsMainDesc.Visible = false
 	end
+
 	return optionfunctions, optionframe
 end)
+
 elements.buttons = (function(inst, con)
 	con = con or {}
 	con.Name = con.Name or "sadasd"
 	con.Desc = con.Desc
 	con.Callback = con.Callback or function() end
+
 	local buttonsframe = resources.optionframe(inst)
 	local buttonfunctions; buttonfunctions = {
 		AddButton = (function(buttonname, callback, keybinddefault)
 			local button = resources.optionbutton(buttonsframe.OptionsFrame)
 			button.OptionsButton.Text = buttonname
 			button.OptionsButton.MouseButton1Click:Connect(function()
+				--button.OptionsButtonStroke.Color = mainui.Color
                 resources.doripple(button.OptionsButton)
 				task.spawn(function()
 					con.Callback(buttonname)
@@ -1759,19 +1603,25 @@ elements.buttons = (function(inst, con)
 			end)
 		end),
 		AddButtons = (function(buttons)
+			-- for i,v in buttons do
+			-- 	buttonfunctions.AddButton(v)
+			-- end
 			for i,v in buttons do
 				buttonfunctions.AddButton(v[1], v[2], v[3])
 			end
 		end),
 	}
+
 	buttonsframe.OptionsMainText.Text = con.Name
 	if con.Desc then
 		buttonsframe.OptionsMainDesc.Text = con.Desc
 	else
 		buttonsframe.OptionsMainDesc.Visible = false
 	end
+
 	return buttonfunctions
 end)
+
 elements.textbox = (function(inst, con)
 	con = con or {}
 	con.Name = con.Name or "sadasd"
@@ -1779,14 +1629,17 @@ elements.textbox = (function(inst, con)
 	con.NumbersOnly = con.NumbersOnly or false
 	con.Default = con.Default or ""
 	con.Callback = con.Callback or function(a) print(a) end
+
 	local textbox = resources.textbox(inst)
 	local textboxfunctions = {}
+
 	textbox.TextboxMainText.Text = con.Name
 	if con.Desc then
 		textbox.TextboxMainDesc.Text = con.Desc
 	else
 		textbox.TextboxMainDesc.Visible = false
 	end
+
 	if con.NumbersOnly then
 		textbox.TextboxFrameBox:GetPropertyChangedSignal("Text"):Connect(function(input)
             local text = textbox.TextboxFrameBox.Text
@@ -1795,12 +1648,14 @@ elements.textbox = (function(inst, con)
             end
 		end)
 	end
+
 	if con.Default ~= "" then
 		textbox.TextboxFrameBox.Text = con.Default
 		task.spawn(function()
 			con.Callback(con.Default)
 		end)
 	end
+
 	textbox.TextboxFrameBox.FocusLost:Connect(function(enter)
 		if enter then
 			local text = textbox.TextboxFrameBox.Text
@@ -1809,11 +1664,14 @@ elements.textbox = (function(inst, con)
 			end)
 		end
 	end)
+
 	textboxfunctions.GetValue = (function()
 		return textbox.TextboxFrameBox.Text
 	end)
+
 	return textboxfunctions
 end)
+
 elements.dropdown = (function(inst, con)
 	con = con or {}
 	con.Name = con.Name or "Dropdown"
@@ -1824,16 +1682,19 @@ elements.dropdown = (function(inst, con)
 	con.Default = con.Default or (con.Multi and {} or nil)
 	con.Callback = con.Callback or function(a) end
 	con.Flags = con.Flags or con.Name:gsub(" ", "")
+
 	local dropdown = resources.dropdown(inst, con.EnableSearchbar, con.Multi)
 	local dropdownfunctions = {}
 	local isDropped = false
 	local selected = con.Default
+
 	dropdown.DropdownMainText.Text = con.Name
 	if con.Desc then
 		dropdown.DropdownMainDesc.Text = con.Desc
 	else
 		dropdown.DropdownMainDesc.Visible = false
 	end
+
 	local function GetButtonText()
 		if con.Multi then
 			if #selected == 0 then
@@ -1847,26 +1708,31 @@ elements.dropdown = (function(inst, con)
 			return selected and tostring(selected) or "Select Option..."
 		end
 	end
+
 	local function UpdateList(searchText)
 		searchText = searchText and string.lower(searchText) or ""
 		local listY = 0
+		
 		for _, v in ipairs(dropdown.DropdownList:GetChildren()) do
 			if v:IsA("TextButton") then
 				v:Destroy()
 			end
 		end
+
 		local visibleItems = 0
 		for _, option in ipairs(con.Options) do
 			if searchText == "" or string.find(string.lower(tostring(option)), searchText) then
 				visibleItems = visibleItems + 1
 				local optBtn = resources.dropdownoption(dropdown.DropdownList)
 				optBtn.OptionButton.Text = tostring(option)
+				
 				local isSelected = false
 				if con.Multi then
 					isSelected = table.find(selected, option) ~= nil
 				else
 					isSelected = (selected == option)
 				end
+
 				if isSelected then
 					optBtn.OptionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 					optBtn.OptionButton.BackgroundColor3 = Color3.fromRGB(55, 61, 62)
@@ -1875,6 +1741,7 @@ elements.dropdown = (function(inst, con)
 					optBtn.OptionButton.TextColor3 = Color3.fromRGB(170, 170, 170)
 					optBtn.OptionButton.BackgroundTransparency = 1.0
 				end
+
 				optBtn.OptionButton.MouseEnter:Connect(function()
 					if not isSelected then
 						game.TweenService:Create(optBtn.OptionButton, TweenInfo.new(0.2), {BackgroundTransparency = 0.9}):Play()
@@ -1885,6 +1752,7 @@ elements.dropdown = (function(inst, con)
 						game.TweenService:Create(optBtn.OptionButton, TweenInfo.new(0.2), {BackgroundTransparency = 1.0}):Play()
 					end
 				end)
+
 				optBtn.OptionButton.MouseButton1Click:Connect(function()
 					if con.Multi then
 						if isSelected then
@@ -1903,21 +1771,27 @@ elements.dropdown = (function(inst, con)
 				listY = listY + 16 + 2 
 			end
 		end
+		
 		listY = listY + 4
 		if visibleItems == 0 then listY = 0 end
 		dropdown.DropdownList.CanvasSize = UDim2.new(0, 0, 0, listY)
+		
 		if isDropped then
 			local maxItems = math.min(visibleItems, 6)
 			local targetListHeight = (maxItems * 18) + 4
 			if visibleItems == 0 then targetListHeight = 0 end
+			
+			-- FIXED: Dynamically calculate box height based on wrapped text!
 			local buttonHeight = math.max(20, dropdown.DropdownButton.AbsoluteSize.Y)
 			local searchHeight = con.EnableSearchbar and 20 or 0
 			local actionHeight = con.Multi and 20 or 0
 			local targetBoxHeight = buttonHeight + searchHeight + actionHeight + targetListHeight
+			
 			game.TweenService:Create(dropdown.DropdownBox, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -8, 0, targetBoxHeight)}):Play()
 			game.TweenService:Create(dropdown.DropdownList, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(1, 0, 0, targetListHeight)}):Play()
 		end
 	end
+
 	if con.Multi and dropdown.DropdownSelectAll and dropdown.DropdownDeselectAll then
 		dropdown.DropdownSelectAll.MouseButton1Click:Connect(function()
 			local newSelected = {}
@@ -1926,15 +1800,18 @@ elements.dropdown = (function(inst, con)
 			end
 			dropdownfunctions.Set(newSelected)
 		end)
+
 		dropdown.DropdownDeselectAll.MouseButton1Click:Connect(function()
 			dropdownfunctions.Set({})
 		end)
+
 		dropdown.DropdownSelectAll.MouseEnter:Connect(function()
 			game.TweenService:Create(dropdown.DropdownSelectAll, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 		end)
 		dropdown.DropdownSelectAll.MouseLeave:Connect(function()
 			game.TweenService:Create(dropdown.DropdownSelectAll, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(170, 170, 170)}):Play()
 		end)
+
 		dropdown.DropdownDeselectAll.MouseEnter:Connect(function()
 			game.TweenService:Create(dropdown.DropdownDeselectAll, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 		end)
@@ -1942,6 +1819,7 @@ elements.dropdown = (function(inst, con)
 			game.TweenService:Create(dropdown.DropdownDeselectAll, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(170, 170, 170)}):Play()
 		end)
 	end
+
 	if con.EnableSearchbar and dropdown.DropdownSearch then
 		dropdown.DropdownSearch:GetPropertyChangedSignal("Text"):Connect(function()
 			if isDropped then
@@ -1949,6 +1827,8 @@ elements.dropdown = (function(inst, con)
 			end
 		end)
 	end
+
+	-- NEW: Listen for when the text wraps and instantly animate the box to fit it
 	dropdown.DropdownButton:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 		if isDropped then
 			UpdateList(dropdown.DropdownSearch and dropdown.DropdownSearch.Text or "")
@@ -1957,6 +1837,7 @@ elements.dropdown = (function(inst, con)
 			game.TweenService:Create(dropdown.DropdownBox, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -8, 0, buttonHeight)}):Play()
 		end
 	end)
+
 	dropdownfunctions.Toggle = (function()
 		isDropped = not isDropped
 		if isDropped then
@@ -1964,13 +1845,16 @@ elements.dropdown = (function(inst, con)
 				dropdown.DropdownSearch.Text = ""
 			end
 			UpdateList()
+			
 			local buttonHeight = math.max(20, dropdown.DropdownButton.AbsoluteSize.Y)
 			local maxItems = math.min(#con.Options, 6)
 			local targetListHeight = (maxItems * 18) + 4
 			if #con.Options == 0 then targetListHeight = 0 end
+			
 			local searchHeight = con.EnableSearchbar and 20 or 0
 			local actionHeight = con.Multi and 20 or 0
 			local targetBoxHeight = buttonHeight + searchHeight + actionHeight + targetListHeight
+			
 			game.TweenService:Create(dropdown.DropdownBox, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -8, 0, targetBoxHeight)}):Play()
 			game.TweenService:Create(dropdown.DropdownList, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(1, 0, 0, targetListHeight)}):Play()
 			game.TweenService:Create(dropdown.DropdownButtonIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Rotation = 180}):Play()
@@ -1981,6 +1865,7 @@ elements.dropdown = (function(inst, con)
 			game.TweenService:Create(dropdown.DropdownButtonIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Rotation = 0}):Play()
 		end
 	end)
+
 	dropdownfunctions.Set = (function(option)
 		selected = option
 		dropdown.DropdownButton.Text = GetButtonText()
@@ -1989,6 +1874,7 @@ elements.dropdown = (function(inst, con)
 			UpdateList(dropdown.DropdownSearch and dropdown.DropdownSearch.Text or "") 
 		end
 	end)
+	
 	dropdownfunctions.Refresh = (function(newOptions)
 		con.Options = newOptions
 		if con.Multi then
@@ -2007,62 +1893,80 @@ elements.dropdown = (function(inst, con)
 			end
 		end
 	end)
+
 	dropdown.DropdownButton.MouseButton1Click:Connect(function()
 		dropdownfunctions.Toggle()
 	end)
+
 	dropdownfunctions.Set(con.Default)
+
 	return dropdownfunctions
 end)
+
 elements.paragraph = (function(inst, name, desc)
 	con =  {}
 	con.Name = name or "paragraph"
 	con.Desc = desc or "A paragraph is a self-contained unit of discourse in writing dealing with a particular point or idea. A paragraph consists of one or more sentences. Though not required by the syntax of any language, paragraphs are usually an expected part of formal writing, used to organize longer prose."
+
 	local paragraph = resources.textbox(inst)
 	local paragraphfunctions = {}
+
+
 	paragraph.TextboxFrame.Visible = false
 	paragraph.TextboxMainPadding.PaddingBottom = UDim.new(0, 8)
+
 	paragraph.TextboxMainText.Text = con.Name
 	if con.Desc then
 		paragraph.TextboxMainDesc.Text = con.Desc
 	else
 		paragraph.TextboxMainDesc.Visible = false
 	end
+
 	paragraphfunctions.SetTitle = (function(text)
 		paragraph.TextboxMainText.Text = text
 	end)
+
 	paragraphfunctions.SetDesc = (function(text)
 		paragraph.TextboxMainDesc.Text = text
 	end)
+
 	return paragraphfunctions
 end)
+
 elements.section = (function(inst, name, desc)
 	local section = resources.section(inst)
 	local sectionfunctions = {}
+
 	section.SectionTopbarFrameTitle.Text = name
 	if desc then
 		section.SectionTopbarFrameDesc.Text = desc
 	else
 		section.SectionTopbarFrameDesc.Visible = false
 	end
+
 	task.delay(2, function()
 		game:GetService("RunService").RenderStepped:Connect(function()
 			section.Section.Size = UDim2.new(1, 0, 0, section.SectionLayout.AbsoluteContentSize.Y + 5)
 		end)
 	end)
+	
 	for i,v in elements do
 		name = i:sub(1,1):upper().. i:sub(2)
 		sectionfunctions["Add".. name] = (function(...)
 			return elements[i](section.Section, ...)
 		end)
 	end
+
 	return sectionfunctions
 end)
+
 mainui.StartUi = (function(con)
 	con = con or {}
 	con.Title = con.Title or "Codecoat"
 	con.SubTitle = con.SubTitle or "Ui Library"
 	con.Image = con.Image or ""
 	con.Size = con.Size or UDim2.new(0, 465, 0, 300)
+
 	local ScreenGui = Instance.new("ScreenGui")
 	local Main = Instance.new("ImageLabel")
 	local Window = Instance.new("CanvasGroup")
@@ -2083,8 +1987,10 @@ mainui.StartUi = (function(con)
 	local BottomBarPadding = Instance.new("UIPadding")
 	local WindowSeperator = Instance.new("Frame")
 	local Container = Instance.new("CanvasGroup")
-	ScreenGui.Parent = game.CoreGui 
+
+	ScreenGui.Parent = game.CoreGui --game.Players.LocalPlayer:WaitForChild("PlayerGui")
 	ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
 	Main.Name = "Main"
 	Main.Parent = ScreenGui
 	Main.AnchorPoint = Vector2.new(0, 0)
@@ -2098,6 +2004,7 @@ mainui.StartUi = (function(con)
 	Main.ScaleType = Enum.ScaleType.Slice
 	Main.SliceCenter = Rect.new(10, 10, 118, 118)
 	Main.ClipsDescendants = true
+
 	Window.Name = "Window"
 	Window.Parent = Main
 	Window.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -2106,9 +2013,11 @@ mainui.StartUi = (function(con)
 	Window.BorderSizePixel = 0
 	Window.Position = UDim2.new(0.5, 0, 0.5, 0)
 	Window.Size = UDim2.new(1, -15, 1, -15)
+
 	WindowCorner.CornerRadius = UDim.new(0, 5)
 	WindowCorner.Name = "WindowCorner"
 	WindowCorner.Parent = Window
+
 	Topbar.Name = "Topbar"
 	Topbar.Parent = Window
 	Topbar.BackgroundColor3 = Color3.fromRGB(28, 30, 31)
@@ -2117,9 +2026,11 @@ mainui.StartUi = (function(con)
 	Topbar.Size = UDim2.new(1, 0, 0, 40)
 	Topbar.Position = UDim2.new(0,0,0,-50)
     resources.DraggingEnabled(Topbar, Main)
+
 	TopbarCorner.CornerRadius = UDim.new(0, 3)
 	TopbarCorner.Name = "TopbarCorner"
 	TopbarCorner.Parent = Topbar
+
 	TopbarTitle.Name = "TopbarTitle"
 	TopbarTitle.Parent = Topbar
 	TopbarTitle.AnchorPoint = Vector2.new(0, 0.5)
@@ -2129,12 +2040,13 @@ mainui.StartUi = (function(con)
 	TopbarTitle.BorderSizePixel = 0
 	TopbarTitle.Position = UDim2.new(0, 45, 0.5, 0)
 	TopbarTitle.Size = UDim2.new(1, -100, 1, -15)
-	TopbarTitle.Font = Enum.Font.BuilderSansBold
+	TopbarTitle.Font = Enum.Font.GothamBold
 	TopbarTitle.Text = con.Title
 	TopbarTitle.TextColor3 = Color3.fromRGB(212, 212, 212)
 	TopbarTitle.TextSize = 14.000
 	TopbarTitle.TextXAlignment = Enum.TextXAlignment.Left
 	TopbarTitle.TextYAlignment = Enum.TextYAlignment.Top
+
 	TopbarDesc.Name = "TopbarDesc"
 	TopbarDesc.Parent = Topbar
 	TopbarDesc.AnchorPoint = Vector2.new(0, 0.5)
@@ -2144,12 +2056,13 @@ mainui.StartUi = (function(con)
 	TopbarDesc.BorderSizePixel = 0
 	TopbarDesc.Position = UDim2.new(0, 45, 0.5, 0)
 	TopbarDesc.Size = UDim2.new(1, -100, 1, -15)
-	TopbarDesc.Font = Enum.Font.BuilderSansBold
+	TopbarDesc.Font = Enum.Font.GothamBold
 	TopbarDesc.Text = con.SubTitle
 	TopbarDesc.TextColor3 = Color3.fromRGB(122, 122, 122)
 	TopbarDesc.TextSize = 12.000
 	TopbarDesc.TextXAlignment = Enum.TextXAlignment.Left
 	TopbarDesc.TextYAlignment = Enum.TextYAlignment.Bottom
+
 	TopbarCornerHider.Name = "TopbarCornerHider"
 	TopbarCornerHider.Parent = Topbar
 	TopbarCornerHider.AnchorPoint = Vector2.new(0, 1)
@@ -2158,6 +2071,7 @@ mainui.StartUi = (function(con)
 	TopbarCornerHider.BorderSizePixel = 0
 	TopbarCornerHider.Position = UDim2.new(0, 0, 1, 0)
 	TopbarCornerHider.Size = UDim2.new(1, 0, 0, 0)
+
 	TopbarImage.Name = "TopbarImage"
 	TopbarImage.Parent = Topbar
 	TopbarImage.AnchorPoint = Vector2.new(0, 0.5)
@@ -2168,9 +2082,11 @@ mainui.StartUi = (function(con)
 	TopbarImage.Position = UDim2.new(0, 10, 0.5, 0)
 	TopbarImage.Size = UDim2.new(0, 25, 0, 25)
 	TopbarImage.Image = "rbxassetid://104122443801564"
+
 	TopbarImageCorner.CornerRadius = UDim.new(0, 3)
 	TopbarImageCorner.Name = "TopbarImageCorner"
 	TopbarImageCorner.Parent = TopbarImage
+
 	TopbarImageMaximize.Name = "TopbarImageMaximize"
 	TopbarImageMaximize.Parent = TopbarImage
 	TopbarImageMaximize.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -2183,6 +2099,7 @@ mainui.StartUi = (function(con)
 	TopbarImageMaximize.AutoButtonColor = false
 	TopbarImageMaximize.Image = "rbxassetid://10734886735"
 	TopbarImageMaximize.ImageTransparency = 1
+
 	TopbarImageMinimize.Name = "TopbarImageMinimize"
 	TopbarImageMinimize.Parent = Topbar
 	TopbarImageMinimize.AnchorPoint = Vector2.new(1, 0.5)
@@ -2196,6 +2113,7 @@ mainui.StartUi = (function(con)
 	TopbarImageMinimize.Image = "rbxassetid://10734895530"
 	TopbarImageMinimize.ImageColor3 = Color3.fromRGB(200, 200, 200)
 	TopbarImageMinimize.ImageTransparency = 1
+
 	SIdebar.Name = "SIdebar"
 	SIdebar.Parent = Window
 	SIdebar.Active = true
@@ -2203,14 +2121,16 @@ mainui.StartUi = (function(con)
 	SIdebar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	SIdebar.BorderSizePixel = 0
 	SIdebar.Position = UDim2.new(0, -122, 0, 40)
-	SIdebar.Size = UDim2.new(0, 115, 1, -40) 
+	SIdebar.Size = UDim2.new(0, 115, 1, -40) --UDim2.new(0, 115, 1, -80)
 	SIdebar.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 	SIdebar.ScrollBarThickness = 0
 	SIdebar.ZIndex = 2
 	SIdebar.CanvasSize = UDim2.new(0, 0, 0, 0)
+
 	SidebarLayout.Name = "SidebarLayout"
 	SidebarLayout.Parent = SIdebar
 	SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
 	BottomBar.Name = "BottomBar"
 	BottomBar.Parent = Window
 	BottomBar.Active = true
@@ -2224,15 +2144,18 @@ mainui.StartUi = (function(con)
 	BottomBar.CanvasSize = UDim2.new(2, 0, 0, 0)
 	BottomBar.ScrollBarThickness = 0
 	BottomBar.Visible = false
+
 	BottomBarLayout.Name = "BottomBarLayout"
 	BottomBarLayout.Parent = BottomBar
 	BottomBarLayout.FillDirection = Enum.FillDirection.Horizontal
 	BottomBarLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	BottomBarLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 	BottomBarLayout.Padding = UDim.new(0, 5)
+
 	BottomBarPadding.Name = "BottomBarPadding"
 	BottomBarPadding.Parent = BottomBar
 	BottomBarPadding.PaddingLeft = UDim.new(0, 8)
+
 	WindowSeperator.Name = "WindowSeperator"
 	WindowSeperator.Parent = Window
 	WindowSeperator.AnchorPoint = Vector2.new(0, 1)
@@ -2242,6 +2165,7 @@ mainui.StartUi = (function(con)
 	WindowSeperator.Position = UDim2.new(0, 0, 1, -35)
 	WindowSeperator.Size = UDim2.new(0, 115, 0, 5)
 	WindowSeperator.Visible = false
+
 	Container.Name = "Container"
 	Container.Parent = Window
 	Container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2250,6 +2174,7 @@ mainui.StartUi = (function(con)
 	Container.BorderSizePixel = 0
 	Container.Position = UDim2.new(0, 120, 0, -45)
 	Container.Size = UDim2.new(1, -125, 1, -50)
+
 	local toggleui = (function(a)
 		if a then
 			ts:Create(Main, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
@@ -2267,22 +2192,37 @@ mainui.StartUi = (function(con)
             ts:Create(TopbarCornerHider, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
                 Size = UDim2.new(1, 0, 0, 3)
             }):Play()
+
 			task.delay(1 + 0.55, function()
+				-- ts:Create(Container, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+				--     Position = UDim2.new(0, 120, 0, 45)
+				-- }):Play()
 				for i,v in Container:GetChildren() do
 					ts:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
 						Size = UDim2.new(1, 0, 1, 0)
 					}):Play()
 				end
 			end)
+
 			task.delay(1 + 0.35, function()
 				ts:Create(SIdebar, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
 					Position = UDim2.new(0, 0, 0, 40)
 				}):Play()
 			end)
+
 			task.delay(1 + 0.45, function()
 				ts:Create(Topbar, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
 					Position = UDim2.new(0, 0, 0, 0)
 				}):Play()
+				-- ts:Create(TopbarImageMinimize, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+				--     ImageTransparency = 0
+				-- }):Play()
+				-- ts:Create(TopbarImage, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+				--     ImageTransparency = 0
+				-- }):Play()
+				-- ts:Create(TopbarImageMaximize, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+				--     ImageTransparency = 1
+				-- }):Play()
 				ts:Create(TopbarCornerHider, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
 					Size = UDim2.new(1, 0, 0, 3)
 				}):Play()
@@ -2309,18 +2249,59 @@ mainui.StartUi = (function(con)
             ts:Create(TopbarCornerHider, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
                 Size = UDim2.new(1, 0, 0, 0)
             }):Play()
+
+			--task.delay(1.1 + 0.55, function()
+			--	-- ts:Create(Container, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+			--	--     Position = UDim2.new(0, 120, 0, 45)
+			--	-- }):Play()
+			--	for i,v in Container:GetChildren() do
+			--		ts:Create(v, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+			--			Size = UDim2.new(1, 0, 0, 0)
+			--		}):Play()
+			--	end
+			--end)
+
+			--task.delay(1.1 + 0.35, function()
+			--	ts:Create(SIdebar, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+			--		Position = UDim2.new(0, 115, 1, -40)
+			--	}):Play()
+			--end)
+
+			--task.delay(1.1 + 0.45, function()
+			--	ts:Create(Topbar, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+			--		Position = UDim2.new(0, 0, 0, 0)
+			--	}):Play()
+			--	-- ts:Create(TopbarImageMinimize, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+			--	--     ImageTransparency = 1
+			--	-- }):Play()
+			--	-- ts:Create(TopbarImage, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+			--	--     ImageTransparency = 1
+			--	-- }):Play()
+			--	-- ts:Create(TopbarImageMaximize, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+			--	--     ImageTransparency = 0
+			--	-- }):Play()
+			--	ts:Create(TopbarCornerHider, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+			--		Size = UDim2.new(1, 0, 0, 3)
+			--	}):Play()
+			--end)
+
 		end
 	end)
+
 	TopbarImageMinimize.MouseButton1Click:Connect(function()
 		toggleui(false)
 	end)
+
 	TopbarImageMaximize.MouseButton1Click:Connect(function()
 		toggleui(true)
 	end)
+
 	local pagefunction = {}
 	local hadopenfirstpage = false
+
 	pagefunction.AddPage = (function(name, icon)
 		local sectionfunctions = {}
+
 		local Main_2 = Instance.new("TextButton")
 		local PageButtonLayout = Instance.new("UIListLayout")
 		local PageButtonPadding = Instance.new("UIPadding")
@@ -2331,6 +2312,7 @@ mainui.StartUi = (function(con)
 		local Main_3 = Instance.new("ScrollingFrame")
 		local PageLayout = Instance.new("UIListLayout")
 		local PagePadding = Instance.new("UIPadding")
+
 		Main_2.Name = "Main"
 		Main_2.Parent = SIdebar
 		Main_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2343,6 +2325,7 @@ mainui.StartUi = (function(con)
 		Main_2.TextColor3 = Color3.fromRGB(0, 0, 0)
 		Main_2.TextSize = 14.000
         Main_2.BackgroundTransparency = 1
+
 		PageButtonLayout.Name = "PageButtonLayout"
 		PageButtonLayout.Parent = Main_2
 		PageButtonLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -2350,9 +2333,11 @@ mainui.StartUi = (function(con)
 		PageButtonLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		PageButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 		PageButtonLayout.Padding = UDim.new(0, 3)
+
 		PageButtonPadding.Name = "PageButtonPadding"
 		PageButtonPadding.Parent = Main_2
 		PageButtonPadding.PaddingLeft = UDim.new(0, 7)
+
 		PageButtonLabel.Name = "PageButtonLabel"
 		PageButtonLabel.Parent = Main_2
 		PageButtonLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2360,7 +2345,8 @@ mainui.StartUi = (function(con)
 		PageButtonLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		PageButtonLabel.BorderSizePixel = 0
 		PageButtonLabel.Size = UDim2.new(0, 17, 0, 17)
-		PageButtonLabel.Image = icon or "" 
+		PageButtonLabel.Image = icon or "" --"rbxassetid://10734950309"
+
 		PageButtonText.Name = "PageButtonText"
 		PageButtonText.Parent = Main_2
 		PageButtonText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2368,21 +2354,24 @@ mainui.StartUi = (function(con)
 		PageButtonText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		PageButtonText.BorderSizePixel = 0
 		PageButtonText.Size = UDim2.new(1, -27, 1, 0)
-		PageButtonText.Font = Enum.Font.BuilderSansBold
+		PageButtonText.Font = Enum.Font.GothamBold
 		PageButtonText.Text = name
 		PageButtonText.TextColor3 = Color3.fromRGB(255, 255, 255)
 		PageButtonText.TextSize = 12.000
 		PageButtonText.TextXAlignment = Enum.TextXAlignment.Left
+
 		PageButtonIndicator.Name = "PageButtonIndicator"
 		PageButtonIndicator.Parent = Main_2
 		PageButtonIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
 		PageButtonIndicator.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		PageButtonIndicator.BorderSizePixel = 0
 		PageButtonIndicator.Size = UDim2.new(0, 0, 1, 0)
+
 		PageButtonGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(131, 131, 131)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 0))}
 		PageButtonGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 1.00), NumberSequenceKeypoint.new(1.00, 0.63)}
 		PageButtonGradient.Name = "PageButtonGradient"
 		PageButtonGradient.Parent = Main_2
+
 		Main_3.Name = "Main"
 		Main_3.Parent = Container
 		Main_3.Active = true
@@ -2394,24 +2383,29 @@ mainui.StartUi = (function(con)
 		Main_3.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 		Main_3.ScrollBarThickness = 0
 		Main_3.Visible = false
+		
 		PageLayout.Name = "PageLayout"
 		PageLayout.Parent = Main_3
 		PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		PageLayout.Padding = UDim.new(0, 5)
+
 		PagePadding.Name = "PagePadding"
 		PagePadding.Parent = Main_3
 		PagePadding.PaddingLeft = UDim.new(0, 1)
 		PagePadding.PaddingRight = UDim.new(0, 1)
 		PagePadding.PaddingTop = UDim.new(0, 1)
+
 		task.delay(2, function()
 			game:GetService("RunService").RenderStepped:Connect(function()
 				Main_3.CanvasSize = UDim2.new(0,0,0,PageLayout.AbsoluteContentSize.Y + 2)
 			end)
 		end)
+
 		if not icon then
 			PageButtonLabel.Visible = false
 			PageButtonText.Size = UDim2.new(1, -14, 1, 0)
 		end
+
 		if hadopenfirstpage == false then
 			hadopenfirstpage = true
 			Container.GroupTransparency = 1
@@ -2432,6 +2426,7 @@ mainui.StartUi = (function(con)
 			end
 			Main_3.Visible = true
 		end
+
 		Main_2.MouseButton1Click:Connect(function()
 			Container.GroupTransparency = 1
 			Container.Position = UDim2.new(0, 120, 0, 65)
@@ -2451,20 +2446,25 @@ mainui.StartUi = (function(con)
 			end
 			Main_3.Visible = true
 		end)
+
 		for i,v in elements do
 			name = i:sub(1,1):upper().. i:sub(2)
 			sectionfunctions["Add".. name] = (function(...)
 				return elements[i](Main_3, ...)
 			end)
 		end
+
 		return sectionfunctions
 	end)
+
 	toggleui(true)
+
 	return pagefunction
 end)
+
 local client = {
-    coroutinemaker = coroutinemaker;
-    notification = notification;
+    coroutinemaker = loadstring(game:HttpGet("https://pastefy.app/CYXJWbVO/raw"))();
+    notification = loadstring(game:HttpGet("https://pastefy.app/GK511jPO/raw"))();
     pl = game:GetService("Players");
     rs = game:GetService("ReplicatedStorage");
     loop = {};
@@ -2485,59 +2485,29 @@ local client = {
 		end
 		return nil
 	end);
+	-- numbercommas = (function(n)
+	-- 	GUF_NO_VIRTUALIZE(function()
+	-- 		local formatted = n
+	-- 		while true do
+	-- 			formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", "%1,%2")
+	-- 			if k == 0 then 
+	-- 				break
+	-- 			end
+	-- 		end
+	-- 		return formatted
+	-- 	end)()
+	-- end);
     itemslocklist = {};
 }
-client.logError = function(err)
-    client.notification:new("Terjadi kesalahan: " .. tostring(err), "error")
-    warn("Auto-farm Error: ", err) 
-end
-local httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
-client.sendWebhook = function(url)
-    if not httprequest then 
-        client.logError("Executor-mu tidak mendukung HTTP Request untuk Webhook.")
-        return 
-    end
-    local cash = client.getcurrencies("Cash") or 0
-    local data = {
-        ["embeds"] = {{
-            ["title"] = "鎖ｸRun A Restaurant - AFK Status",
-            ["description"] = "Laporan otomatis dari script Codecoat.",
-            ["color"] = tonumber(0x00FF00), 
-            ["fields"] = {
-                {
-                    ["name"] = "側 Player",
-                    ["value"] = client.pl.LocalPlayer.Name,
-                    ["inline"] = true
-                },
-                {
-                    ["name"] = "跳 Cash",
-                    ["value"] = "$" .. tostring(cash),
-                    ["inline"] = true
-                }
-            },
-            ["footer"] = {
-                ["text"] = "Codecoat Webhook Tracker"
-            },
-            ["timestamp"] = DateTime.now():ToIsoDate()
-        }}
-    }
-    pcall(function()
-        httprequest({
-            Url = url,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = game:GetService("HttpService"):JSONEncode(data)
-        })
-    end)
-end
 local configs = {
     autoactions = false;
     servingactions = {};
 }
+
+-- yes this indeed from amity tutorial video because i am absolutely lack of motivation to create my own
 local FolderName = "CodecoatRAR"
 local FileName = FolderName.."\\RARconfigs.json"
+
 local http = game:GetService("HttpService")
 local function jsone(str) 
 	return http:JSONEncode(str) 
@@ -2545,6 +2515,7 @@ end
 local function jsond(str) 
 	return http:JSONDecode(str) 
 end
+
 local cachedconfigs = isfolder(FolderName) and isfile(FileName) and jsond(readfile(FileName))
 if cachedconfigs then
     for i,v in next, configs do
@@ -2564,6 +2535,7 @@ if not isfile(FileName) then
     warn(FileName," not found")
     writefile(FileName,jsone(configs))
 end
+
 local hm = GUF_NO_VIRTUALIZE(function()
 	for i,v in client.rs.Framework:GetDescendants() do
 		if (function(tbl, str)
@@ -2582,74 +2554,7 @@ local hm = GUF_NO_VIRTUALIZE(function()
     end
 end)
 hm()
-client.moveTo = (function(targetCFrame)
-    local char = client.pl.LocalPlayer.Character
-    local hrp = char and char:FindFirstChild("HumanoidRootPart")
-    local hum = char and char:FindFirstChild("Humanoid")
-    if not hrp or not hum then return end
-    if configs.movementmethod == "Tween" then
-        local distance = (hrp.Position - targetCFrame.Position).Magnitude
-        local speed = configs.tweenspeed or 80 
-        local moveTime = distance / speed
-        local tweenInfo = TweenInfo.new(moveTime, Enum.EasingStyle.Linear)
-        local tween = game:GetService("TweenService"):Create(hrp, tweenInfo, {CFrame = targetCFrame})
-        tween:Play()
-        task.wait(moveTime) 
-    elseif configs.movementmethod == "Pathfinding" then
-        local PathfindingService = game:GetService("PathfindingService")
-        local path = PathfindingService:CreatePath({
-            AgentRadius = 1.2, 
-            AgentHeight = 5,
-            AgentCanJump = true,
-            WaypointSpacing = 3,
-        })
-        local success, errorMessage = pcall(function()
-            path:ComputeAsync(hrp.Position, targetCFrame.Position)
-        end)
-        if success and path.Status == Enum.PathStatus.Success then
-            local noclipConnection
-            noclipConnection = game:GetService("RunService").Stepped:Connect(function()
-                if char then
-                    for _, part in ipairs(char:GetDescendants()) do
-                        if part:IsA("BasePart") and part.CanCollide then
-                            part.CanCollide = false
-                        end
-                    end
-                end
-            end)
-            local waypoints = path:GetWaypoints()
-            for _, waypoint in ipairs(waypoints) do
-                if waypoint.Action == Enum.PathWaypointAction.Jump then
-                    hum.Jump = true
-                end
-                hum:MoveTo(waypoint.Position)
-                local reached = hum.MoveToFinished:Wait(1.5)
-                if not reached then
-                    hum.Jump = true 
-                end
-            end
-            if noclipConnection then
-                noclipConnection:Disconnect()
-            end
-        else
-            char:PivotTo(targetCFrame)
-        end
-    else
-        char:PivotTo(targetCFrame)
-    end
-end)
-client.getDynamicDelay = (function(baseDelay)
-    local success, ping = pcall(function()
-        return game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
-    end)
-    if not success or not ping then return baseDelay end
-    if ping > 400 then
-        return baseDelay + 0.5 
-    elseif ping > 200 then
-        return baseDelay + 0.2 
-    end
-    return baseDelay 
-end)
+
 client.getlocalres = (function()
     return client.md.clientrestaurant.GetLocal()
 end)
@@ -2707,12 +2612,12 @@ client.getpriciestcustomer = (function(name)
 				local price = client.md.recipeutil.ComputeSalePrice(recipe, saveget)
 				if price > maxprice then
 					maxprice = price
-					bestcustomerid = v[1]
-					bestrecipeid = v[2]
+					bestCustomerId = v[1]
+					bestRecipeId = v[2]
 				end
 			end
 		end
-		return bestcustomerid, bestrecipeid, maxprice
+		return bestCustomerId, bestRecipeId, maxprice
 	end
 	return nil
 end)
@@ -2759,7 +2664,7 @@ client.getblackmarketcyclestring = (function(cycle)
         local timeDiff = nextarrival - now
         local relativetime = ("%dh %dm"):format(math.floor(timeDiff / 3600), math.floor((timeDiff % 3600) / 60))
         table.insert(lines, ("[Cycle %d] Starts at: %s (In %s)"):format(cycleindex, os.date("%I:%M %p", nextarrival), relativetime))
-        for i,v in client.md.blackmarkettypes.RollInventory(cycleindex, level) do 
+        for i,v in client.md.blackmarkettypes.RollInventory(cycleindex, level) do -- devs fucking deleted RollInventory function
             table.insert(lines, ("- %s (x%d)"):format(v.Id, v.Quantity))
         end
     end
@@ -2770,7 +2675,7 @@ client.lockitemslistupdate = (function()
         client.itemslocklist[v] = configs.itemslockamount or nil
     end
 end)
-client.entityinvoke = (function(attributeid, invokeid) 
+client.entityinvoke = (function(attributeid, invokeid) -- (TargetDishwasherId, DepositDishPlayer)
 	local id = game:GetService("Players").LocalPlayer:GetAttribute(attributeid)
 	if id then
 		for i,v in client.getlocalres().Entity do
@@ -2780,34 +2685,32 @@ client.entityinvoke = (function(attributeid, invokeid)
 		end
 	end
 end)
-client.runactionsfromentities = GUF_NO_VIRTUALIZE(function(actionname, shouldtp) 
+client.runactionsfromentities = GUF_NO_VIRTUALIZE(function(actionname, shouldtp) -- "Assign Seat", "Take Order", "Serve", "Wash", "Cook", "Take"
     for i,v in client.getlocalres().Model.Entities:GetChildren() do
         if v:FindFirstChild("HumanoidRootPart") and v.HumanoidRootPart:FindFirstChild("ProximityPrompt") and v.HumanoidRootPart.ProximityPrompt.Enabled and v.HumanoidRootPart.ProximityPrompt.ActionText == actionname then
             if shouldtp then
-				client.moveTo(v.HumanoidRootPart.CFrame)
+				client.pl.LocalPlayer.Character:PivotTo(v.HumanoidRootPart.CFrame)
 			end
 			fireproximityprompt(v.HumanoidRootPart.ProximityPrompt)
         elseif v:FindFirstChild("Root") and v.Root:FindFirstChild("ProximityPrompt") and v.Root.ProximityPrompt.Enabled and v.Root.ProximityPrompt.ActionText == actionname then
             if shouldtp then
-				client.moveTo(v.Root.CFrame)
+				client.pl.LocalPlayer.Character:PivotTo(v.Root.CFrame)
 			end
 			fireproximityprompt(v.Root.ProximityPrompt)
         elseif v:FindFirstChild("Interact") and v.Interact:FindFirstChild("ProximityPrompt") and v.Interact.ProximityPrompt.Enabled and v.Interact.ProximityPrompt.ActionText == actionname then
             if shouldtp then
-				client.moveTo(v.Interact.CFrame)
+				client.pl.LocalPlayer.Character:PivotTo(v.Interact.CFrame)
 			end
 			fireproximityprompt(v.Interact.ProximityPrompt)
         end
     end
 end)
-client.runactionsfromdebris = (function(actionname, cooldown, shouldbreak) 
-	if shouldbreak == nil then
-		shouldbreak = true
-	end
+client.runactionsfromdebris = (function(actionname, cooldown, shouldbreak) -- "Serve", "Cook", "Pick Up"
+	shouldbreak = shouldbreak or true
     for i,v in workspace.__DEBRIS:GetChildren() do
         if v:FindFirstChild("ProximityPrompt") and v.ProximityPrompt.Enabled and v.ProximityPrompt.ActionText == actionname then
             fireproximityprompt(v.ProximityPrompt)
-            task.wait(client.getDynamicDelay(cooldown or 0.05))
+            task.wait(cooldown or 0)
 			if shouldbreak then
 				break
 			end
@@ -2825,11 +2728,14 @@ client.npcset = (function()
     for i,v in client.getlocalres().Model.Entities:GetChildren() do
         if v:FindFirstChild("Humanoid") and not v:GetAttribute("Set") then
             task.spawn(function()
+                -- v.Humanoid.WalkSpeed = 300
                 v:SetAttribute("Set", true)
+                -- v:PivotTo(CFrame.new(v.Humanoid.WalkToPoint) * CFrame.new(0, 5.5, 0))
                 v.Humanoid:GetPropertyChangedSignal("WalkToPoint"):Connect(function()
                     if configs.fastnpcs then
                         v:PivotTo(CFrame.new(v.Humanoid.WalkToPoint) * CFrame.new(0, 5.5, 0))
                     end
+                    -- v.Humanoid.WalkSpeed = 300
                 end)
             end)
         end
@@ -2864,14 +2770,25 @@ client.claimgnomes = (function()
 				xpcall(function()
 					game.Players.LocalPlayer.Character:PivotTo(v:GetPivot())
 					fireclickdetector(v.__SecretGnomeClickDetector)
-				end, client.logError)
+				end, print)
 			until not v:FindFirstChild("__SecretGnomeClickDetector") 
 		end
 	end
 end)
 client.buyboughtableitems = (function()
-	xpcall(function()
-			for i,v in (configs.boughtableitems or {}) do
+	task.spawn(function()
+		xpcall(function()
+			for i,v in configs.boughtableitems do
+				--client.md.shopcmds.Purchase(v)
+				-- task.spawn(function()
+					-- client.md.network.Invoke("Shop_Purchase", v)
+				-- end)
+				-- local success = client.md.network.Invoke("Shop_Purchase", v)
+				-- if success then
+				-- 	repeat task.wait(0.05) 
+				-- 		success = client.md.network.Invoke("Shop_Purchase", v)
+				-- 	until not success
+				-- end
 				if client.getitemquantity(v) > 0 then
 					repeat task.wait(0.05)
 						client.md.network.Invoke("Shop_Purchase", v)
@@ -2879,7 +2796,8 @@ client.buyboughtableitems = (function()
 				end
 				task.wait(0.1)
 			end
-	end, client.logError)
+		end, print)
+	end)
 end)
 client.collectmilestone = (function()
 	for _, k in client.md.milestonesutil.GetCategories() do
@@ -2905,6 +2823,7 @@ client.sellexisting = (function()
         client.md.currencycmds.Sell(tosell)
     end
 end)
+
 local notifytimeout = tick()
 task.spawn(function()
 	client.ori = {
@@ -2948,7 +2867,7 @@ task.spawn(function()
     for i,v in {
 		autoactions = {0.1, function()
 			task.spawn(function()
-				client.moveTo(client.getorderstandmodel():GetPivot() * CFrame.new(0, 10, 0))
+				client.pl.LocalPlayer.Character:PivotTo(client.getorderstandmodel():GetPivot() * CFrame.new(0, 10, 0))
 			end)
 			for i,v in configs.servingactions do
 				if v == "Food Serve" then
@@ -2963,33 +2882,46 @@ task.spawn(function()
         autoharvest = {0.1, function()
 			for i,v in workspace.__DEBRIS:GetChildren() do
 				if client.md.clientfridge.HasSpace() and v:FindFirstChild("ProximityPrompt") and v.ProximityPrompt.Enabled and v.ProximityPrompt.ActionText == "Harvest" and not table.find(configs.cropexclude, v.Name:match("^([^_]+)")) then
-					client.moveTo(v.CFrame)
+					client.pl.LocalPlayer.Character:PivotTo(v.CFrame)
 					fireproximityprompt(v.ProximityPrompt)
 					task.wait(0.015)
 				end
 			end
         end};
         claimcashregister = {0.2, function()
+            -- for i,v in client.getlocalres().Model.Entities:GetChildren() do
+            --     if v:FindFirstChild("Cashregister") and v:FindFirstChild("Interact") and v.Interact:FindFirstChild("ProximityPrompt") and v.Interact.ProximityPrompt.Enabled then
+            --         fireproximityprompt(v.Interact.ProximityPrompt)
+            --     end
+            -- end
 			for i,v in client.getlocalres().Entity do
 				if v.DirId == "Cash Register" and v:GetSave("Cash") and v:GetSave("Cash") >= configs.cashregisteramount then
 					repeat task.wait()
-						client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+						client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 						v:Invoke("CashRegisterClaim")
 					until v:GetSave("Cash") <= configs.cashregisteramount
 				end
 			end
         end};
         claimtipjar = {0.2, function()
+            -- for i,v in client.getlocalres().Model.Entities:GetChildren() do
+            --     if v:FindFirstChild("Tipjar") and v:FindFirstChild("Interact") and v.Interact:FindFirstChild("ProximityPrompt") and v.Interact.ProximityPrompt.Enabled then
+            --         fireproximityprompt(v.Interact.ProximityPrompt)
+            --     end
+            -- end
 			for i,v in client.getlocalres().Entity do
 				if v.DirId:find("Tip Jar") and v:GetSave("Cash") and v:GetSave("Cash") >= configs.tipjaramount then
 					repeat task.wait()
-						client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+						client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 						v:Invoke("TipJarClaim")
 					until v:GetSave("Cash") <= configs.tipjaramount
 				end
 			end
         end};
         claimquests = {1, function()
+			-- setconstant(getupvalue(getconnections(client.pl.LocalPlayer.PlayerGui.Quests.Quests.Frame.Content.Header.Buttons.ActiveButton.Activated)[1].Function, 4), 2, "fsiasdfadsf")
+			-- getupvalue(getconnections(client.pl.LocalPlayer.PlayerGui.Quests.Quests.Frame.Content.Header.Buttons.ActiveButton.Activated)[1].Function, 4)()
+            -- client.collectquests()
 			if client.md.questcmds.HasClaimable() then
 				client.md.tabcontroller.OpenTab("Quests")
 				repeat task.wait()
@@ -3002,6 +2934,7 @@ task.spawn(function()
             client.runactionsfromdebris("Fill")
         end};   
         feederfill = {0.05, function()
+           -- client.runactionsfromentities("Fill")
 		   local feedercurrencytype = {
 				["Pig Feeder"] = "Carrot";
 				["Cow Feeder"] = "Corn";
@@ -3011,7 +2944,7 @@ task.spawn(function()
 		   for i,v in client.getlocalres().Entity do
 				if v.Model and feedercurrencytype[v.DirId] then
 					if client.getcurrencies(feedercurrencytype[v.DirId]) > 0 and v:GetSave("Amount") <= (configs.feederamount or 0) then
-						client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+						client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 						v:Fire("Fill")
 					end
 				end
@@ -3020,7 +2953,7 @@ task.spawn(function()
         stationfill = {0.05, function()
             for i,v in client.getlocalres().Entity do
                 if v.DirId == "Basic Processing Station" and v:GetSave("Mode") and v:GetSave("Amount") and client.getcurrencies(v:GetSave("Mode")) > 0 and v:GetSave("Amount") <= (configs.stationamount or 0) then
-                    client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+                    client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
                     v:Invoke("ProcessingStation_Fill")
                 end
             end
@@ -3040,15 +2973,20 @@ task.spawn(function()
 		refillcoffeebeans = {0.1, function()
 			for i,v in client.getlocalres().Entity do
 				if v.Model and v:GetSave("CoffeeBeans") and client.getcurrencies("Coffee Beans") > 0 and v:GetSave("CoffeeBeans") <= (configs.coffeebeansamount or 0) then
-					client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+					client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 					v:Invoke("CoffeeMachineFill")
 				end
 			end
 		end};
 		refillmilk = {0.1, function()
+			-- for i,v in client.getlocalres().Model.Entities:GetChildren() do
+            --     if v.Name:find("Ice Cream Cart") and v:FindFirstChild("Refill") and v.Refill:FindFirstChild("ProximityPrompt") and v.Refill.ProximityPrompt.Enabled then
+            --         fireproximityprompt(v.Refill.ProximityPrompt)
+            --     end
+            -- end
 			for i,v in client.getlocalres().Entity do
 				if v.Model and v:GetSave("Milk") and client.getcurrencies("Milk") > 0 and v:GetSave("Milk") <= (configs.milkamount or 0) then
-					client.moveTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
+					client.pl.LocalPlayer.Character:PivotTo(v.Model:GetPivot() * CFrame.new(0, 2, 0))
 					v:Invoke("IceCreamCartFill")
 				end
 			end
@@ -3059,6 +2997,7 @@ task.spawn(function()
                     fireproximityprompt(v.Claim.ProximityPrompt)
                 end
             end
+
 		end};
 		trainstaffs = {1, function()
 			for i,v in client.getlowestfromclass(configs.stafftrainclasses) do
@@ -3066,7 +3005,7 @@ task.spawn(function()
 				if isyes then
 					xpcall(function()
 						notification:new("trained: ".. v:GetDirectory().DisplayName)
-					end, client.logError)
+					end, print)
 				end
 			end
 		end};
@@ -3103,7 +3042,7 @@ task.spawn(function()
 				xpcall(function()
 					--getupvalue(client.md.playerserving.update, 4).Triggered._connections[1]._f()
 					client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
-					client.moveTo(getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+					client.pl.LocalPlayer.Character:PivotTo(getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
 				end, print)
 			until not client.pl.LocalPlayer:GetAttribute("TargetCustomerId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Food Serve")
 		end
@@ -3118,7 +3057,7 @@ task.spawn(function()
 				xpcall(function()
 					--getupvalue(client.md.playerstoves.update, 3).Triggered._connections[1]._f()
 					client.entityinvoke("TargetStoveId", "ActivateStovePlayer")
-					client.moveTo(getupvalue(client.md.playerstoves.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+					client.pl.LocalPlayer.Character:PivotTo(getupvalue(client.md.playerstoves.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
 				end, print)
 			until not client.pl.LocalPlayer:GetAttribute("TargetStoveId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Cook Food")
 		end
@@ -3132,7 +3071,7 @@ task.spawn(function()
 			repeat task.wait()
 				xpcall(function()
 					--getupvalue(client.md.playerdishwasher.update, 3).Triggered._connections[1]._f()
-					client.moveTo(getupvalue(client.md.playerdishwasher.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+					client.pl.LocalPlayer.Character:PivotTo(getupvalue(client.md.playerdishwasher.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
 					client.entityinvoke("TargetDishwasherId", "DepositDishPlayer")
 				end, print)
 			until not client.pl.LocalPlayer:GetAttribute("TargetDishwasherId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Wash Dishes")
@@ -3152,6 +3091,7 @@ task.spawn(function()
 			notification:new("Blackmarket has spawned!")
 		end
 	end)
+	-- yea ik this is very very horrible!!!
 	client.pl.LocalPlayer.PlayerGui.Shop.Shop.Frame.Background.Header.RefreshTimer:GetPropertyChangedSignal("Text"):Connect(function()
 		if client.pl.LocalPlayer.PlayerGui.Shop.Shop.Frame.Background.Header.RefreshTimer.Text == "Restock: 0:01" and configs.restocknotify then
 			notification:new("Shop has restocked!")
@@ -3168,34 +3108,14 @@ task.spawn(function()
         end
     end)
 end)
+
 local ui = mainui.StartUi({
-    Title = "Holy Cow";
-    SubTitle = "Run A Restaurant | 1.0.1";
+    Title = "Codecoat";
+    SubTitle = "Run A Restaurant | 1.4.2";
+	--Size = UDim2.new(0, 485, 0, 350);
 })
 local page = ui.AddPage("Main")
-local sec = page.AddSection("Restaurant") 
-sec.AddDropdown({
-    Name = "Movement Method";
-    Desc = "Teleport = Instan, Tween = Lurus Tembus Tembok, Pathfinding = Jalan Natural (Anti-Ban).";
-    Options = {"Teleport", "Tween", "Pathfinding"};
-    Multi = false;
-    Default = configs.movementmethod or "Teleport";
-    Callback = (function(a)
-        configs.movementmethod = a
-    end);
-})
-sec.AddSlider({
-    Name = "Tween Speed";
-    Desc = "Atur kecepatan jalan karakter saat menggunakan metode Tween.";
-    Default = configs.tweenspeed or 80;
-    Min = 20; 
-    Max = 300; 
-    Round = 0;
-    Prefix = "";
-    Callback = (function(a)
-        configs.tweenspeed = a
-    end)
-})
+local sec = page.AddSection("Restaurant") --, "Automatically serve customers and run your restaurant by yourself.")
 local option = sec.AddOptions({
 	Name = "Restaurant Actions";
 	Desc = "Select various restaurant actions to run automatically.";
@@ -3210,6 +3130,10 @@ for i,v in {"Food Serve", "Wash Dishes", "Cook Food"} do
         configs.servingactions = a
     end)
 end
+-- .AddOptions({"Assign Seat", "Take Order", "Food Serve", "Wash Dishes", "Take Recipe", "Cook Food"}, function(a)
+--     configs.servingactions = a
+--     print(#configs.servingactions)
+-- end)
 local timeouttick = tick()
 sec.AddToggle({
 	Name = "Start Restaurant Actions";
@@ -3219,6 +3143,7 @@ sec.AddToggle({
 		configs.autoactions = a
 		task.spawn(function()
 			local hum = client.pl.LocalPlayer.Character.Humanoid
+			-- workspace.CurrentCamera.CameraSubject = a and (client.getorderstandmodel() or hum) or hum
 			workspace.CurrentCamera.CameraType = Enum.CameraType.Track
 			if table.find(configs.servingactions, "Take Order") then
 				client.runactionsfromentities("Take Order")
@@ -3251,6 +3176,7 @@ sec.AddToggle({
 		end
 	end);
 })
+
 local sec = page.AddSection("Incomes") 
 local textbox = sec.AddTextbox({
 	Name = "Claim Cash Register At";
@@ -3269,6 +3195,14 @@ local toggle = sec.AddToggle({
 		configs.claimcashregister = a
 	end);
 })
+-- task.spawn(function()
+-- 	while true do task.wait(0.25)
+-- 		xpcall(function()
+-- 			-- toggle.SetDesc
+-- 			print("Automatically teleport and claim the cash register when it hits desired amount of cash.\nClaiming At: $".. tostring(client.numbercommas(tonumber(textbox.GetValue()))))
+-- 		end, print)
+-- 	end
+-- end)
 local textbox = sec.AddTextbox({
 	Name = "Claim Tip Jar At";
 	Desc = "Set the minimum amount of tips to claim.";
@@ -3286,13 +3220,20 @@ local toggle = sec.AddToggle({
 		configs.claimtipjar = a
 	end);
 })
+-- task.spawn(function()
+-- 	while true do task.wait(0.25)
+-- 		xpcall(function()
+-- 			print("Automatically teleport and claim the tip jar when it hites desired amount of tips.\nClaiming At: $".. tostring(client.numbercommas(tonumber(textbox.GetValue()))))
+-- 		end, print)
+-- 	end
+-- end)
+
 local sec = page.AddSection("Crop") 
-configs.cropexclude = configs.cropexclude or {}
+configs.cropexclude = {}
 local option, optionframe = sec.AddOptions({
 	Name = "Exclude Crops";
 	Desc = "Select various crops to exclude. Preventing it from being harvested.";
-    Multi = true;
-	Default = configs.cropexclude;
+    Multi = configs.cropexclude or {};
     Callback = (function(a)
         configs.cropexclude = a
     end);
@@ -3311,6 +3252,7 @@ sec.AddToggle({
 		configs.autoharvest = a
 	end);
 })
+
 local sec = page.AddSection("Animals") 
 sec.AddSlider({
 	Name = "Start Refill At";
@@ -3340,6 +3282,7 @@ sec.AddToggle({
 		configs.takeresources = a
 	end);
 })
+
 local sec = page.AddSection("Processing Station") 
 sec.AddSlider({
 	Name = "Start Refill At";
@@ -3361,6 +3304,7 @@ sec.AddToggle({
 		configs.stationfill = a
 	end);
 })
+
 local sec = page.AddSection("Fishing") 
 sec.AddToggle({
 	Name = "Auto Fishing";
@@ -3378,6 +3322,7 @@ sec.AddToggle({
 		configs.autoreel = a
 	end);
 })
+
 local sec = page.AddSection("Bees") 
 sec.AddToggle({
 	Name = "Collect Honey";
@@ -3387,6 +3332,7 @@ sec.AddToggle({
 		configs.takehoney = a
 	end);
 })
+
 local sec = page.AddSection("Coffee Machine") 
 sec.AddSlider({
 	Name = "Start Refill At";
@@ -3408,6 +3354,7 @@ sec.AddToggle({
 		configs.refillcoffeebeans = a
 	end);
 })
+
 local sec = page.AddSection("Ice Cream Stand") 
 sec.AddSlider({
 	Name = "Start Refill At";
@@ -3429,6 +3376,15 @@ sec.AddToggle({
 		configs.refillmilk = a
 	end);
 })
+-- sec.AddTextbox({
+-- 	Name = "Claim Earnings At";
+-- 	Desc = "Set the minimum amount of earnings to claim.";
+-- 	Default = "1000";
+-- 	NumbersOnly = true;
+-- 	Callback = (function(a)
+-- 		configs.icecreamearnings = tonumber(a)
+-- 	end);
+-- })
 sec.AddToggle({
 	Name = "Claim Earnings";
 	Desc = "Automatically claim ice cream cart earnings when they're available.";
@@ -3437,6 +3393,7 @@ sec.AddToggle({
 		configs.claimicecreamcart = a
 	end);
 })
+
 local sec = page.AddSection("Influencer") 
 sec.AddToggle({
 	Name = "Accept Influencer Offer";
@@ -3446,6 +3403,7 @@ sec.AddToggle({
 		configs.influencerclaim = a
 	end);
 })
+
 local sec = page.AddSection("Food Truck") 
 sec.AddToggle({
 	Name = "Fill Food Truck";
@@ -3455,47 +3413,8 @@ sec.AddToggle({
 		configs.foodtruckfill = a
 	end);
 })
+
 local page = ui.AddPage("Misc")
-local perfSec = page.AddSection("Performance")
-local blackScreenGui = Instance.new("ScreenGui")
-blackScreenGui.Name = "CPUSaver"
-blackScreenGui.IgnoreGuiInset = true
-blackScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-blackScreenGui.Parent = gethui and gethui() or game.CoreGui
-blackScreenGui.Enabled = false
-local blackFrame = Instance.new("Frame")
-blackFrame.Size = UDim2.new(1, 0, 1, 0)
-blackFrame.BackgroundColor3 = Color3.new(0, 0, 0)
-blackFrame.Parent = blackScreenGui
-local wakeButton = Instance.new("TextButton")
-wakeButton.Size = UDim2.new(1, 0, 1, 0)
-wakeButton.BackgroundTransparency = 1
-wakeButton.Text = "嫌 CPU & RAM SAVER AKTIF 嫌\n\n[ Klik di mana saja untuk mematikan dan kembali ke game ]"
-wakeButton.TextColor3 = Color3.fromRGB(150, 150, 150)
-wakeButton.Font = Enum.Font.SourceSansBold
-wakeButton.TextSize = 25
-wakeButton.Parent = blackFrame
-local cpuToggle = perfSec.AddToggle({
-    Name = "CPU & RAM Saver (AFK Mode)";
-    Desc = "Menghitamkan layar & menurunkan FPS ke 15. Sangat direkomendasikan untuk AFK semalaman.";
-    Default = configs.cpusaver or false;
-    Callback = (function(state)
-        configs.cpusaver = state
-        blackScreenGui.Enabled = state
-        if state then
-            if setfpscap then setfpscap(15) end
-            pcall(function() game:GetService("RunService"):Set3dRenderingEnabled(false) end)
-        else
-            if setfpscap then setfpscap(0) end
-            pcall(function() game:GetService("RunService"):Set3dRenderingEnabled(true) end)
-        end
-    end);
-})
-wakeButton.MouseButton1Click:Connect(function()
-    if cpuToggle and cpuToggle.Set then
-        cpuToggle.Set(false) 
-    end
-end)
 local sec = page.AddSection("NPCs")
 sec.AddToggle({
 	Name = "Fast NPCs";
@@ -3506,6 +3425,7 @@ sec.AddToggle({
         client.npcset()
 	end);
 })
+
 local sec = page.AddSection("Order Stand") 
 sec.AddToggle({
 	Name = "Grab Priciest Recipe";
@@ -3523,6 +3443,7 @@ sec.AddToggle({
 		configs.servebestfood = a
 	end);
 })
+
 local sec = page.AddSection("Ingredients") 
 local option = sec.AddOptions({
 	Name = "Ingredients Classes";
@@ -3566,6 +3487,7 @@ sec.AddToggle({
         end
 	end);
 })
+
 local sec = page.AddSection("Recruitement")
 local option = sec.AddOptions({
 	Name = "Staff Classes";
@@ -3589,6 +3511,7 @@ sec.AddToggle({
 		configs.buyemployees = a
 	end);
 })
+
 local sec = page.AddSection("Staff Training")
 local option = sec.AddOptions({
 	Name = "Staff Classes";
@@ -3618,6 +3541,7 @@ sec.AddToggle({
 		configs.trainstaffs = a
 	end);
 })
+
 local sec = page.AddSection("User Interfaces") 
 sec.AddButtons({
     Name = "GUIs Opener";
@@ -3630,6 +3554,7 @@ sec.AddButtons({
 		client.md.tabcontroller.OpenTab("SellItems")
 	end};
 })
+
 local sec = page.AddSection("Quests") 
 sec.AddToggle({
 	Name = "Claim Quests";
@@ -3639,6 +3564,7 @@ sec.AddToggle({
 		configs.claimquests = a
 	end);
 })
+
 local sec = page.AddSection("Milestones") 
 sec.AddToggle({
 	Name = "Claim Milestones";
@@ -3648,6 +3574,7 @@ sec.AddToggle({
 		configs.claimmilestones = a
 	end);
 })
+
 local sec = page.AddSection("Gnomes") 
 sec.AddButtons({
 	Name = "Secret Gnomes";
@@ -3657,6 +3584,7 @@ sec.AddButtons({
 		client.claimgnomes()
 	end};
 })
+
 local page = ui.AddPage("Shop")
 local sec = page.AddSection("Store") 
 local sorteditems = {}
@@ -3677,14 +3605,22 @@ sec.AddDropdown({
 		configs.boughtableitems = a
 	end);
 })
+
 sec.AddToggle({
 	Name = "Buy Items";
 	Desc = "Automatically buy items when they are in stock.";
 	Default = configs.boughtitems;
 	Callback = (function(a)
 		configs.boughtitems = a
+		task.spawn(function()
+			while configs.boughtitems do
+				client.buyboughtableitems()
+				task.wait(0.1)
+			end
+		end)
 	end);
 })
+
 local sec = page.AddSection("Blackmarket") 
 local sorteditems = {}
 for i,v in client.md.blackmarkettypes.Config.Items do
@@ -3705,6 +3641,7 @@ sec.AddDropdown({
 	end);
 })
 local processedCycleIndex = nil
+-- credits to gemini 3.1 pro. because i am starting to lose interested on this game. sowwwyyy :<<
 sec.AddToggle({
 	Name = "Buy Blackmarket Items";
 	Desc = "Automatically buys blackmarket items when they are available.";
@@ -3712,7 +3649,7 @@ sec.AddToggle({
 	Callback = (function(a)
 		configs.buyblackmarket = a
 		task.spawn(function()
-			local bmTypes = client.md.blackmarkettypes
+			local bmTypes = client.md.blackMarkettypes
 			local bmCmds = client.md.blackmarketcmds
 			while configs.buyblackmarket do
 				local now = workspace:GetServerTimeNow()
@@ -3723,11 +3660,11 @@ sec.AddToggle({
 						processedCycleIndex = cycleIndex
 						local state = bmCmds.GetState()
 						local level = state.Level
-						local items = (type(bmTypes.RollInventory) == "function" and bmTypes.RollInventory(cycleIndex, level)) or {}
+						local items = bmTypes.RollInventory(cycleIndex, level)
 						for _, item in ipairs(items) do
 							local alreadyPurchased = state.Purchases[item.Id] or 0
 							local remaining = item.Quantity - alreadyPurchased
-							if table.find(configs.blackmarketitems or {}, item.Id) and remaining > 0 then
+							if table.find(configs.blackmarketitems, item.Id) and remaining > 0 then
 								for i = 1, remaining do
 									bmCmds.Purchase(item.Id, 1)
 									task.wait(0.5)
@@ -3743,6 +3680,7 @@ sec.AddToggle({
 		end)
 	end);
 })
+
 local sec = page.AddSection("Notifier") 
 sec.AddToggle({
 	Name = "Blackmarket Notify";
@@ -3760,53 +3698,28 @@ sec.AddToggle({
 		configs.restocknotify = a
 	end);
 })
+
+-- local predictorparagraph
+-- local sec = page.AddSection("Blackmarket Predictor") 
+-- predictorparagraph = sec.AddParagraph("Blackmarket Cycles", client.getblackmarketcyclestring(configs.cycleamount or 1))
+-- sec.AddSlider({
+-- 	Name = "Cycle Amount";
+-- 	Desc = "Adjust how much the next blackmarket cycle to be shown.";
+-- 	Default = configs.cycleamount or 1;
+-- 	Min = 1;
+-- 	Max = 3;
+-- 	Round = 0;
+-- 	Prefix = "";
+-- 	Callback = (function(a)
+-- 		configs.cycleamount = a
+--         if predictorparagraph then
+--             predictorparagraph.SetDesc(client.getblackmarketcyclestring(configs.cycleamount))
+--         end
+-- 	end)
+-- })
+
+
 local page = ui.AddPage("Info")
-local webhookSec = page.AddSection("Discord Webhook")
-webhookSec.AddTextbox({
-	Name = "Webhook URL";
-	Desc = "Paste link Discord Webhook kamu di sini.";
-	Default = configs.webhookurl or "";
-	NumbersOnly = false;
-	Callback = (function(text)
-		configs.webhookurl = text
-	end);
-})
-webhookSec.AddSlider({
-	Name = "Interval Laporan (Menit)";
-	Desc = "Atur seberapa sering laporan dikirim ke Discord (dalam menit).";
-	Default = configs.webhookinterval or 15;
-	Min = 1;
-	Max = 60;
-	Round = 0;
-	Prefix = " Menit";
-	Callback = (function(val)
-		configs.webhookinterval = val
-	end)
-})
-webhookSec.AddToggle({
-	Name = "Aktifkan Webhook Tracker";
-	Desc = "Script akan mengirimkan laporan status AFK secara berkala ke server Discord kamu.";
-	Default = configs.webhooktoggle or false;
-	Callback = (function(state)
-		configs.webhooktoggle = state
-		if state and configs.webhookurl and configs.webhookurl ~= "" then
-		    client.sendWebhook(configs.webhookurl)
-		end
-	end);
-})
-task.spawn(function()
-    while true do
-        task.wait(60) 
-        if configs.webhooktoggle and configs.webhookurl and configs.webhookurl ~= "" then
-            if not client.lastWebhookSent then client.lastWebhookSent = tick() end
-            local intervalDetik = (configs.webhookinterval or 15) * 60
-            if tick() - client.lastWebhookSent >= intervalDetik then
-                client.sendWebhook(configs.webhookurl)
-                client.lastWebhookSent = tick() 
-            end
-        end
-    end
-end)
 local sec = page.AddSection("Configs")
 sec.AddButtons({
     Name = "Configs Manager";
@@ -3821,6 +3734,7 @@ sec.AddButtons({
 		notification:new("Success!")
 	end};
 })
+
 local sec = page.AddSection("Discord")
 sec.AddButtons({
     Name = "Discord Server";
@@ -3835,9 +3749,13 @@ sec.AddButtons({
         notification:new("Success!")
 	end};
 })
+
 local sec = page.AddSection("Developer & Credits")
 sec.AddParagraph("Dexemox", "UI Developer, Script Developer, Founder of Codecoat\nDiscord: dexemoxed")
 sec.AddParagraph("alohabeach", "Coroutine-maker, Notification Module")
+
+
+
 task.spawn(function()
 	for i,v in getconnections(game:GetService("RunService").Heartbeat) do
 		if v.Function and islclosure(v.Function) and getconstants(v.Function)[2] == "AntiAFK_Report" then
