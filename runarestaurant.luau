@@ -3014,7 +3014,6 @@ client.moveTo = (function(targetCFrame)
     if not hrp or not hum then return end
 
     if configs.movementmethod == "Tween" then
-        -- Bergerak halus lurus (Bisa nabrak tembok)
         local distance = (hrp.Position - targetCFrame.Position).Magnitude
         local speed = configs.tweenspeed or 80 
         local moveTime = distance / speed
@@ -3026,13 +3025,14 @@ client.moveTo = (function(targetCFrame)
         task.wait(moveTime) 
 
     elseif configs.movementmethod == "Pathfinding" then
-        -- Bergerak cerdas menggunakan GPS Roblox (Anti nabrak)
         local PathfindingService = game:GetService("PathfindingService")
+        
+        -- AgentRadius dikecilkan dari 2 menjadi 1.2 agar karakter berani masuk celah sempit
         local path = PathfindingService:CreatePath({
-            AgentRadius = 2,
+            AgentRadius = 1.2, 
             AgentHeight = 5,
-            AgentCanJump = true, -- Mengizinkan karakter melompat
-            WaypointSpacing = 4,
+            AgentCanJump = true,
+            WaypointSpacing = 3,
         })
         
         local success, errorMessage = pcall(function()
@@ -3040,28 +3040,45 @@ client.moveTo = (function(targetCFrame)
         end)
         
         if success and path.Status == Enum.PathStatus.Success then
+            -- [ SISTEM NO-CLIP DIMULAI ]
+            -- Membuat karakter tembus pandang terhadap meja/kursi selama berjalan
+            local noclipConnection
+            noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+                if char then
+                    for _, part in ipairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") and part.CanCollide then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+
             local waypoints = path:GetWaypoints()
             for _, waypoint in ipairs(waypoints) do
-                -- Jika butuh melompat, maka lompat
                 if waypoint.Action == Enum.PathWaypointAction.Jump then
                     hum.Jump = true
                 end
                 
                 hum:MoveTo(waypoint.Position)
                 
-                -- Tunggu sampai karakter tiba di titik tersebut (maksimal 2 detik agar tidak stuck)
-                local reached = hum.MoveToFinished:Wait(2)
+                -- Timeout diperketat menjadi 1.5 detik. Jika tertahan, paksa lompat.
+                local reached = hum.MoveToFinished:Wait(1.5)
                 if not reached then
-                    break -- Jika nyangkut, berhenti mengikuti jalur ini
+                    hum.Jump = true 
                 end
             end
+            
+            -- [ SISTEM NO-CLIP DIMATIKAN ]
+            -- Mengembalikan fisik karakter setelah sampai
+            if noclipConnection then
+                noclipConnection:Disconnect()
+            end
         else
-            -- Jika jalan buntu dan tidak ada rute, gunakan teleport sebagai cadangan
+            -- Jika sama sekali tidak ada rute (terjebak), gunakan teleport paksa
             char:PivotTo(targetCFrame)
         end
         
     else
-        -- Berpindah instan (Teleport)
         char:PivotTo(targetCFrame)
     end
 end)
@@ -3397,6 +3414,7 @@ local timeouttick = tick()
 task.spawn(function()
     for i,v in {
 		autoactions = {0.1, function()
+			-- script agar karakter berjalan ke order stand terus
 			-- task.spawn(function()
 			--	client.moveTo(client.getorderstandmodel():GetPivot() * CFrame.new(0, 10, 0))
 			-- end)
