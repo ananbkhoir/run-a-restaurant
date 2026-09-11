@@ -3582,40 +3582,6 @@ task.spawn(function()
         task.wait(0.1)
         client.npcset()
     end)
-	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetCustomerId"):Connect(function()
-		if configs.autoactions and table.find(configs.servingactions, "Food Serve") then
-			if client.debugmode then
-				notification:new("Serving food...")
-			end
-			repeat task.wait()
-				-- xpcall(function()
-				--	client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
-				--	client.moveTo(getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
-				-- end, client.logError)
-				xpcall(function()
-					client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
-					
-					local targetPos = getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0)
-					client.moveTo(targetPos)
-				end, client.logError)
-			until not client.pl.LocalPlayer:GetAttribute("TargetCustomerId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Food Serve")
-		end
-	end)
-	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetStoveId"):Connect(function()
-		if configs.autoactions and table.find(configs.servingactions, "Cook Food") then
-			if client.debugmode then
-				notification:new("Cooking food...")
-			end
-			--task.wait(0.1)
-			repeat task.wait()
-				xpcall(function()
-					--getupvalue(client.md.playerstoves.update, 3).Triggered._connections[1]._f()
-					client.entityinvoke("TargetStoveId", "ActivateStovePlayer")
-					client.moveTo(getupvalue(client.md.playerstoves.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
-				end, client.logError)
-			until not client.pl.LocalPlayer:GetAttribute("TargetStoveId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Cook Food")
-		end
-	end)
 	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetDishwasherId"):Connect(function()
 		if configs.autoactions and table.find(configs.servingactions, "Wash Dishes") then
 			local targetId = client.pl.LocalPlayer:GetAttribute("TargetDishwasherId")
@@ -3651,6 +3617,40 @@ task.spawn(function()
                     end
 			    end
 			end, client.logError)
+		end
+	end)
+	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetCustomerId"):Connect(function()
+		if configs.autoactions and table.find(configs.servingactions, "Food Serve") then
+			if client.debugmode then
+				notification:new("Serving food...")
+			end
+			repeat task.wait()
+				-- xpcall(function()
+				--	client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
+				--	client.moveTo(getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+				-- end, client.logError)
+				xpcall(function()
+					client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
+					
+					local targetPos = getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0)
+					client.moveTo(targetPos)
+				end, client.logError)
+			until not client.pl.LocalPlayer:GetAttribute("TargetCustomerId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Food Serve")
+		end
+	end)
+	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetStoveId"):Connect(function()
+		if configs.autoactions and table.find(configs.servingactions, "Cook Food") then
+			if client.debugmode then
+				notification:new("Cooking food...")
+			end
+			--task.wait(0.1)
+			repeat task.wait()
+				xpcall(function()
+					--getupvalue(client.md.playerstoves.update, 3).Triggered._connections[1]._f()
+					client.entityinvoke("TargetStoveId", "ActivateStovePlayer")
+					client.moveTo(getupvalue(client.md.playerstoves.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+				end, client.logError)
+			until not client.pl.LocalPlayer:GetAttribute("TargetStoveId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Cook Food")
 		end
 	end)
 	client.md.network.Fired("Influencer_OfferCreated"):Connect(function()
