@@ -3659,7 +3659,7 @@ end)
 
 local ui = mainui.StartUi({
     Title = "Holy Cow";
-    SubTitle = "Run A Restaurant | 1.0.0";
+    SubTitle = "Run A Restaurant | 1.0.1";
 	--Size = UDim2.new(0, 485, 0, 350);
 })
 local page = ui.AddPage("Main")
