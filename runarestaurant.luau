@@ -2951,6 +2951,8 @@ client.logError = function(err)
     warn("Auto-farm Error: ", err) -- Tetap simpan di konsol untuk debugging
 end
 
+client.isBusy = false
+
 local configs = {
     autoactions = false;
     servingactions = {};
@@ -3582,13 +3584,63 @@ task.spawn(function()
         task.wait(0.1)
         client.npcset()
     end)
+	-- 1. TUGAS MENYAJIKAN MAKANAN (FOOD SERVE)
+	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetCustomerId"):Connect(function()
+		if configs.autoactions and table.find(configs.servingactions, "Food Serve") then
+			local targetId = client.pl.LocalPlayer:GetAttribute("TargetCustomerId")
+			if not targetId then return end
+			
+			while client.isBusy do task.wait(0.1) end -- Tunggu antrean jika sedang sibuk
+			client.isBusy = true -- Kunci status menjadi sibuk
+			
+			xpcall(function()
+				client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
+				local targetNode = getupvalue(client.md.playerserving.update, 4)
+				if targetNode and targetNode.Handle then
+					client.moveTo(targetNode.Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+				end
+				
+				-- Tunggu sampai pesanan ditaruh
+				repeat task.wait(client.getDynamicDelay(0.1)) until not client.pl.LocalPlayer:GetAttribute("TargetCustomerId")
+			end, client.logError)
+			
+			client.isBusy = false -- Selesai tugas, buka kembali antrean
+		end
+	end)
+
+	-- 2. TUGAS MEMASAK (COOK FOOD)
+	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetStoveId"):Connect(function()
+		if configs.autoactions and table.find(configs.servingactions, "Cook Food") then
+			local targetId = client.pl.LocalPlayer:GetAttribute("TargetStoveId")
+			if not targetId then return end
+			
+			while client.isBusy do task.wait(0.1) end -- Tunggu antrean
+			client.isBusy = true
+			
+			xpcall(function()
+				client.entityinvoke("TargetStoveId", "ActivateStovePlayer")
+				local targetNode = getupvalue(client.md.playerstoves.update, 3)
+				if targetNode and targetNode.Handle then
+					client.moveTo(targetNode.Handle.Parent.CFrame * CFrame.new(0, 5, 0))
+				end
+				
+				repeat task.wait(client.getDynamicDelay(0.1)) until not client.pl.LocalPlayer:GetAttribute("TargetStoveId")
+			end, client.logError)
+			
+			client.isBusy = false
+		end
+	end)
+
+	-- 3. TUGAS CUCI PIRING (WASH DISHES)
 	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetDishwasherId"):Connect(function()
 		if configs.autoactions and table.find(configs.servingactions, "Wash Dishes") then
 			local targetId = client.pl.LocalPlayer:GetAttribute("TargetDishwasherId")
 			if not targetId then return end
 			
+			while client.isBusy do task.wait(0.1) end -- Tunggu antrean
+			client.isBusy = true
+			
 			xpcall(function()
-			    -- 1. Mencari lokasi mesin cuci piring
 			    local targetModel = nil
 			    for _, entity in client.getlocalres().Entity do
 			        if entity:GetModel():GetAttribute("EntityId") == targetId then
@@ -3598,59 +3650,22 @@ task.spawn(function()
 			    end
 			    
 			    if targetModel then
-			        -- 2. Berjalan ke mesin cuci piring
-			        client.moveTo(targetModel:GetPivot() * CFrame.new(0, 0, 3)) -- Menggunakan jarak 3 stud agar tidak menabrak mesin
+			        client.moveTo(targetModel:GetPivot() * CFrame.new(0, 0, 3))
 			        
-			        -- 3. Meletakkan piring (loop hingga piring benar-benar lepas)
 			        repeat task.wait(client.getDynamicDelay(0.1))
 			            client.entityinvoke("TargetDishwasherId", "DepositDishPlayer")
-			        until not client.pl.LocalPlayer:GetAttribute("TargetDishwasherId") or not configs.autoactions or not table.find(configs.servingactions, "Wash Dishes")
+			        until not client.pl.LocalPlayer:GetAttribute("TargetDishwasherId") or not configs.autoactions
 			        
-                    -- 4. KEMBALI KE ORDER STAND (MARKAS)
-                    -- Mengecek apakah fitur Cook Food atau Food Serve sedang menyala
                     if configs.autoactions and (table.find(configs.servingactions, "Food Serve") or table.find(configs.servingactions, "Cook Food")) then
                         local orderStand = client.getorderstandmodel()
                         if orderStand then
-                            -- Berjalan santai ke depan Order Stand (offset 5 stud agar tidak nyangkut di dalam meja)
                             client.moveTo(orderStand:GetPivot() * CFrame.new(0, 0, 5))
                         end
                     end
 			    end
 			end, client.logError)
-		end
-	end)
-	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetCustomerId"):Connect(function()
-		if configs.autoactions and table.find(configs.servingactions, "Food Serve") then
-			if client.debugmode then
-				notification:new("Serving food...")
-			end
-			repeat task.wait()
-				-- xpcall(function()
-				--	client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
-				--	client.moveTo(getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
-				-- end, client.logError)
-				xpcall(function()
-					client.entityinvoke("TargetCustomerId", "PlaceDeliveryPlayer")
-					
-					local targetPos = getupvalue(client.md.playerserving.update, 4).Handle.Parent.CFrame * CFrame.new(0, 5, 0)
-					client.moveTo(targetPos)
-				end, client.logError)
-			until not client.pl.LocalPlayer:GetAttribute("TargetCustomerId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Food Serve")
-		end
-	end)
-	client.pl.LocalPlayer:GetAttributeChangedSignal("TargetStoveId"):Connect(function()
-		if configs.autoactions and table.find(configs.servingactions, "Cook Food") then
-			if client.debugmode then
-				notification:new("Cooking food...")
-			end
-			--task.wait(0.1)
-			repeat task.wait()
-				xpcall(function()
-					--getupvalue(client.md.playerstoves.update, 3).Triggered._connections[1]._f()
-					client.entityinvoke("TargetStoveId", "ActivateStovePlayer")
-					client.moveTo(getupvalue(client.md.playerstoves.update, 3).Handle.Parent.CFrame * CFrame.new(0, 5, 0))
-				end, client.logError)
-			until not client.pl.LocalPlayer:GetAttribute("TargetStoveId") or client.md.pingentity.IsActive() == false or configs.autoactions == false or not table.find(configs.servingactions, "Cook Food")
+			
+			client.isBusy = false
 		end
 	end)
 	client.md.network.Fired("Influencer_OfferCreated"):Connect(function()
